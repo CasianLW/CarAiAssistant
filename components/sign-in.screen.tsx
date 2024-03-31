@@ -37,114 +37,116 @@ const SignInScreen: FC<SigninScreenProps> = ({ setIsAuthenticated }) => {
 
   return (
     <View className={"bg-app-black-200 "} style={styles.container}>
-      <View className="bg-app-white-100 w-full">
+      <View className="bg-app-white-100 w-full ">
         <Image
-          source={require("@/assets/images/login-image.png")}
-          className="bg-cover w-full "
+          source={require("@/assets/images/app-ressources/login-image.webp")}
+          className="bg-cover w-full mt-44 "
         />
       </View>
-      <View className="bg-app-white-100 w-11/12 mt-auto mx-10 rounded-3xl">
-        <Text
-          className="text-app-black-300 my-6 text-center"
-          style={globalStyles.title}
-        >
-          Sign In
-        </Text>
-        <TextInput
-          className="mx-auto"
-          style={globalStyles.lightInput}
-          placeholder="Username"
-          placeholderTextColor="#888"
-          onChangeText={(text) => setUsername(text)}
-          value={username}
-        />
-        <TextInput
-          className="mx-auto"
-          style={globalStyles.lightInput}
-          placeholder="Password"
-          placeholderTextColor="#888"
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          secureTextEntry
-        />
-        <View className="w-1/2 m-auto">
-          <ButtonComponent
-            onPress={handleSignIn}
-            title="Log in"
-            disabled={isSigningIn}
-            secondary={false}
-            white={false}
+      <View className="absolute z-10 w-11/12 top-[180px]">
+        <View className="bg-app-white-100 mt-auto  rounded-3xl p-4">
+          <Text
+            className="text-app-black-300 mb-6 mt-2 text-center"
+            style={globalStyles.title}
+          >
+            Sign In
+          </Text>
+          <TextInput
+            className="mx-auto"
+            style={globalStyles.lightInput}
+            placeholder="Username"
+            placeholderTextColor="#888"
+            onChangeText={(text) => setUsername(text)}
+            value={username}
           />
-        </View>
-        {/* <Button title="Sign In" onPress={handleSignIn} disabled={isSigningIn} /> */}
-
-        <Button
-          color={"#03050C"}
-          title="Forgot Password?"
-          onPress={() => navigation.navigate("ForgotPassword")}
-        />
-      </View>
-      {/* <View className="mb-44 ">
-        <LinearGradient
-          colors={["#9A6B36", "#CCA373", "#9A6B36"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={globalStyles.gradient}
-        >
+          <TextInput
+            className="mx-auto"
+            style={globalStyles.lightInput}
+            placeholder="Password"
+            placeholderTextColor="#888"
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            secureTextEntry
+          />
+          <View className="w-1/2 m-auto mb-5">
+            <ButtonComponent
+              onPress={handleSignIn}
+              title="Log in"
+              disabled={isSigningIn}
+              secondary={false}
+              white={false}
+            />
+          </View>
+          {/* <Button title="Sign In" onPress={handleSignIn} disabled={isSigningIn} /> */}
           <Button
             color={"#03050C"}
-            title="Don't have an account? Sign Up"
-            onPress={() => navigation.navigate("SignUp")}
+            title="Forgot Password?"
+            onPress={() => navigation.navigate("ForgotPassword")}
           />
-        </LinearGradient>
-      </View> */}
-      <View className="mb-44 mt-4 ">
-        <ButtonComponent
-          onPress={() => navigation.navigate("SignUp")}
-          secondary={true}
-          title="Don't have an account? Sign Up"
-        />
-        {/* <Pressable
-          onPress={() => navigation.navigate("SignUp")}
-          style={({ pressed }) => [
-            {
-              // backgroundColor: pressed ? '#DDDDDD' : 'transparent',
-              opacity: pressed ? 0.8 : 1,
-            }, // Your existing styles
-          ]}
-        >
-          {({ pressed }) => (
-            <LinearGradient
-              colors={["#CB9684", "#895442", "#CB9684"]}
-              start={{ x: 0, y: 0.5 }}
-              end={{ x: 1, y: 0.5 }}
-              style={{ borderRadius: 10, overflow: "hidden", padding: 1 }}
-            >
+        </View>
+        {/* <View className="mb-44 ">
+          <LinearGradient
+            colors={["#9A6B36", "#CCA373", "#9A6B36"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={globalStyles.gradient}
+          >
+            <Button
+              color={"#03050C"}
+              title="Don't have an account? Sign Up"
+              onPress={() => navigation.navigate("SignUp")}
+            />
+          </LinearGradient>
+        </View> */}
+        <View className="mb-44 mt-4 ">
+          <ButtonComponent
+            onPress={() => navigation.navigate("SignUp")}
+            secondary={true}
+            white={false}
+            title="Don't have an account? Sign Up"
+          />
+          {/* <Pressable
+            onPress={() => navigation.navigate("SignUp")}
+            style={({ pressed }) => [
+              {
+                // backgroundColor: pressed ? '#DDDDDD' : 'transparent',
+                opacity: pressed ? 0.8 : 1,
+              }, // Your existing styles
+            ]}
+          >
+            {({ pressed }) => (
               <LinearGradient
-                colors={
-                  !pressed
-                    ? ["#895442", "#CB9684", "#895442"]
-                    : ["#03050C", "#03050C", "#03050C"]
-                }
-                // colors={["#895442", "#CB9684", "#895442"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={{
-                  padding: 15,
-                  borderRadius: 9,
-                  backgroundColor: "#03050C ",
-                }}
+                colors={["#CB9684", "#895442", "#CB9684"]}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+                style={{ borderRadius: 10, overflow: "hidden", padding: 1 }}
               >
-                <Text
-                  className="font-semibold"
-                  style={{ textAlign: "center", color: "#fff" }}
+                <LinearGradient
+                  colors={
+                    !pressed
+                      ? ["#895442", "#CB9684", "#895442"]
+                      : ["#03050C", "#03050C", "#03050C"]
+                  }
+                  // colors={["#895442", "#CB9684", "#895442"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={{
+                    padding: 15,
+                    borderRadius: 9,
+                    backgroundColor: "#03050C ",
+                  }}
                 >
-                  Don't have an account? Sign Up
-                </Text>
+                  <Text
+                    className="font-semibold"
+                    style={{ textAlign: "center", color: "#fff" }}
+                  >
+                    Don't have an account? Sign Up
+                  </Text>
+                </LinearGradient>
               </LinearGradient>
-            </LinearGradient>
-          )}
-        </Pressable> */}
+            )}
+          </Pressable> */}
+        </View>
       </View>
     </View>
   );

@@ -14,6 +14,7 @@ import { AuthStackParamList } from "@/app/_layout";
 import { useNavigation } from "@react-navigation/native";
 import ButtonComponent from "./general/button-component";
 import useForgotPassword from "@/hooks/use-forgot-password";
+import globalStyles from "@/styles/globalStyles";
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
 const ForgotPasswordScreen: FC = () => {
@@ -36,11 +37,11 @@ const ForgotPasswordScreen: FC = () => {
       <View className="bg-app-black-300 w-full -z-20 ">
         <Text>Test</Text>
         <Image
-          source={require("@/assets/images/forgot-pwd-img.webp")}
-          className="bg-cover  w-full "
+          source={require("@/assets/images/app-ressources/forgot-pwd-img.webp")}
+          className="bg-cover  w-full mt-36"
         />
       </View>
-      <View className="z-10 absolute bg-app-white-100 w-11/12 p-4 rounded-3xl">
+      <View className="z-10 absolute bg-app-white-100 w-11/12 p-4 rounded-3xl top-[180px]">
         <Modal
           animationType="slide"
           transparent={true}
@@ -53,7 +54,7 @@ const ForgotPasswordScreen: FC = () => {
             <View style={styles.modalView}>
               <Text>Reset Password</Text>
               <TextInput
-                style={styles.input}
+                style={globalStyles.lightInput}
                 className="w-[240px]"
                 placeholder="Confirmation Code"
                 placeholderTextColor="#888"
@@ -61,7 +62,7 @@ const ForgotPasswordScreen: FC = () => {
                 onChangeText={setCode}
               />
               <TextInput
-                style={styles.input}
+                style={globalStyles.lightInput}
                 className="w-[240px]"
                 placeholder="New Password"
                 placeholderTextColor="#888"
@@ -94,13 +95,13 @@ const ForgotPasswordScreen: FC = () => {
         <TextInput
           className="placeholder-gray-500"
           placeholderTextColor="#888"
-          style={styles.input}
+          style={globalStyles.lightInput}
           placeholder="Username"
           onChangeText={(text) => setUsername(text)}
           value={username}
         />
         {/* <Button title="Submit" onPress={handleForgotPassword} /> */}
-        <View className="w-1/2 m-auto">
+        <View className="w-1/2 m-auto mb-5">
           <ButtonComponent
             onPress={handleForgotPassword}
             title="Submit"
@@ -128,14 +129,16 @@ const styles = StyleSheet.create({
     // width: "100%",
     marginBottom: 10,
     padding: 10,
-    borderColor: "gray",
-    borderWidth: 1,
+    backgroundColor: "#EEECE9",
+    borderRadius: 5,
+    // borderColor: "gray",
+    // borderWidth: 1,
   },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    marginTop: -124,
   },
   modalView: {
     margin: 20,
