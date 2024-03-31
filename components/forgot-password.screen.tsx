@@ -1,84 +1,119 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Modal } from "react-native";
+import React, { FC, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Modal,
+  Image,
+} from "react-native";
 import { Auth } from "aws-amplify";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "@/app/_layout";
 import { useNavigation } from "@react-navigation/native";
+import ButtonComponent from "./general/button-component";
+import useForgotPassword from "@/hooks/use-forgot-password";
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
-const ForgotPasswordScreen: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [code, setCode] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+const ForgotPasswordScreen: FC = () => {
+  const {
+    username,
+    setUsername,
+    code,
+    setCode,
+    newPassword,
+    setNewPassword,
+    isResetModalVisible,
+    setIsResetModalVisible,
+    handleForgotPassword,
+    handlePasswordResetConfirm,
+  } = useForgotPassword();
   const navigation = useNavigation<SignInNavigationProp>();
-  const [isResetModalVisible, setIsResetModalVisible] = useState(false);
-
-  const handleForgotPassword = async () => {
-    try {
-      await Auth.forgotPassword(username);
-      setIsResetModalVisible(true); // Show modal after successful forgotPassword request
-    } catch (error) {
-      console.error("Forgot password error", error);
-      // Handle forgot password error, display an error message, etc.
-    }
-  };
-  const handlePasswordResetConfirm = async () => {
-    try {
-      await Auth.forgotPasswordSubmit(username, code, newPassword);
-      setIsResetModalVisible(false); // Close the modal on successful password reset
-      navigation.navigate("SignIn"); // Redirect to sign-in page
-    } catch (error) {
-      console.error("Password reset confirmation error", error);
-    }
-  };
 
   return (
     <View style={styles.container}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isResetModalVisible}
-        onRequestClose={() => {
-          setIsResetModalVisible(false);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text>Reset Password</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Confirmation Code"
-              placeholderTextColor="#888"
-              value={code}
-              onChangeText={setCode}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="New Password"
-              placeholderTextColor="#888"
-              secureTextEntry
-              value={newPassword}
-              onChangeText={setNewPassword}
-            />
-            <Button
-              title="Confirm Reset"
-              onPress={handlePasswordResetConfirm}
-            />
+      <View className="bg-app-black-300 w-full -z-20 ">
+        <Text>Test</Text>
+        <Image
+          source={require("@/assets/images/forgot-pwd-img.webp")}
+          className="bg-cover  w-full "
+        />
+      </View>
+      <View className="z-10 absolute bg-app-white-100 w-11/12 p-4 rounded-3xl">
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isResetModalVisible}
+          onRequestClose={() => {
+            setIsResetModalVisible(false);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text>Reset Password</Text>
+              <TextInput
+                style={styles.input}
+                className="w-[240px]"
+                placeholder="Confirmation Code"
+                placeholderTextColor="#888"
+                value={code}
+                onChangeText={setCode}
+              />
+              <TextInput
+                style={styles.input}
+                className="w-[240px]"
+                placeholder="New Password"
+                placeholderTextColor="#888"
+                secureTextEntry
+                value={newPassword}
+                onChangeText={setNewPassword}
+              />
+              {/* <Button
+                title="Confirm Reset"
+                onPress={handlePasswordResetConfirm}
+              /> */}
+              <View className="w-1/2 m-auto mb-2">
+                <ButtonComponent
+                  onPress={handlePasswordResetConfirm}
+                  title="Confirm Reset"
+                  secondary={false}
+                  white={false}
+                />
+              </View>
+
+              <Button
+                title="Cancel"
+                color={"#FF0000"}
+                onPress={() => setIsResetModalVisible(false)}
+              />
+            </View>
           </View>
+        </Modal>
+        <Text className="text-center text-2xl mb-4">Forgot Password</Text>
+        <TextInput
+          className="placeholder-gray-500"
+          placeholderTextColor="#888"
+          style={styles.input}
+          placeholder="Username"
+          onChangeText={(text) => setUsername(text)}
+          value={username}
+        />
+        {/* <Button title="Submit" onPress={handleForgotPassword} /> */}
+        <View className="w-1/2 m-auto">
+          <ButtonComponent
+            onPress={handleForgotPassword}
+            title="Submit"
+            secondary={false}
+            white={false}
+          />
         </View>
-      </Modal>
-      <Text>Forgot Password</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        onChangeText={(text) => setUsername(text)}
-        value={username}
-      />
-      <Button title="Submit" onPress={handleForgotPassword} />
-      <Button
-        title="Already have an account? Sign In"
-        onPress={() => navigation.navigate("SignIn")}
-      />
+        <Button
+          title="Already have an account? Sign In"
+          color={"#03050C"}
+          onPress={() => navigation.navigate("SignIn")}
+        />
+      </View>
     </View>
   );
 };
@@ -90,7 +125,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    width: "80%",
+    // width: "100%",
     marginBottom: 10,
     padding: 10,
     borderColor: "gray",
