@@ -13,11 +13,13 @@ export default StyleSheet.create({
     fontWeight: "bold",
   },
   lightInput: {
-    width: "80%",
+    width: "100%",
     marginBottom: 10,
     padding: 10,
-    backgroundColor: "#f5f5f5",
-    borderWidth: 1,
+    backgroundColor: "#EEECE9",
+    borderRadius: 5,
+    // backgroundColor: "#f5f5f5",
+    // borderWidth: 1,
   },
   title: {
     fontSize: 24,
