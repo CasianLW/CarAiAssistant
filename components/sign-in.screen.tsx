@@ -17,6 +17,7 @@ import { AuthStackParamList } from "@/app/_layout";
 import globalStyles from "@/styles/globalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 import ButtonComponent from "./general/button-component";
+import useSignIn from "@/hooks/use-sign-in";
 
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
@@ -24,28 +25,15 @@ type SigninScreenProps = {
   setIsAuthenticated: (value: boolean) => void;
 };
 const SignInScreen: FC<SigninScreenProps> = ({ setIsAuthenticated }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    username,
+    setUsername,
+    password,
+    setPassword,
+    isSigningIn,
+    handleSignIn,
+  } = useSignIn(setIsAuthenticated);
   const navigation = useNavigation<SignInNavigationProp>();
-  const { setUser } = useAuth(); // Assuming you're using the context we previously discussed
-
-  const [isSigningIn, setIsSigningIn] = useState(false); // New state to manage sign-in button disabled state
-
-  const handleSignIn = async () => {
-    if (isSigningIn) return; // Prevent multiple sign-in attempts
-    setIsSigningIn(true); // Disable the sign-in button
-    try {
-      const user = await Auth.signIn(username, password);
-      setUser(user);
-      setIsAuthenticated(true);
-      // Navigate to the next screen or show success message
-    } catch (error) {
-      console.error("Sign in error", error);
-      // Handle sign-in error, display an error message, etc.
-    } finally {
-      setIsSigningIn(false); // Re-enable the sign-in button
-    }
-  };
 
   return (
     <View className={"bg-app-black-200 "} style={styles.container}>
@@ -85,7 +73,7 @@ const SignInScreen: FC<SigninScreenProps> = ({ setIsAuthenticated }) => {
             title="Log in"
             disabled={isSigningIn}
             secondary={false}
-            white={true}
+            white={false}
           />
         </View>
         {/* <Button title="Sign In" onPress={handleSignIn} disabled={isSigningIn} /> */}
