@@ -1,10 +1,21 @@
 import React, { FC, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Modal } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Modal,
+  Image,
+} from "react-native";
 import { Auth } from "aws-amplify";
 import { useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "@/app/_layout";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useAuth } from "@/context/auth-context";
+import ButtonComponent from "./general/button-component";
+import useSignUp from "@/hooks/use-sign-up";
+import globalStyles from "@/styles/globalStyles";
 
 type SignUpNavigationProp = StackNavigationProp<AuthStackParamList, "SignUp">;
 
@@ -12,85 +23,83 @@ type SignUpScreenProps = {
   setIsAuthenticated: (value: boolean) => void;
 };
 const SignUpScreen: FC<SignUpScreenProps> = ({ setIsAuthenticated }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const navigation = useNavigation<SignUpNavigationProp>();
-  const { setUser } = useAuth();
-
-  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
-  const [confirmationCode, setConfirmationCode] = useState("");
-
-  const handleSignUp = async () => {
-    try {
-      await Auth.signUp({ username, password });
-      setIsConfirmModalVisible(true); // Show confirmation modal
-    } catch (error) {
-      console.error("Sign up error", error);
-      // Handle sign-up error, display an error message, etc.
-    }
-  };
-  const handleConfirmSignUp = async () => {
-    try {
-      await Auth.confirmSignUp(username, confirmationCode);
-      // Optional: Sign in the user automatically
-      const user = await Auth.signIn(username, password);
-      setUser(user);
-
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error("Error confirming sign up:", error);
-      // Handle confirmation error, display an error message, etc.
-    } finally {
-      setIsConfirmModalVisible(false); // Hide the modal regardless of the outcome
-    }
-  };
+  const {
+    username,
+    setUsername,
+    password,
+    setPassword,
+    isConfirmModalVisible,
+    setIsConfirmModalVisible,
+    confirmationCode,
+    setConfirmationCode,
+    handleSignUp,
+    handleConfirmSignUp,
+  } = useSignUp(setIsAuthenticated);
 
   return (
     <View style={styles.container}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isConfirmModalVisible}
-        onRequestClose={() => {
-          setIsConfirmModalVisible(false);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text>Enter Confirmation Code</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Confirmation Code"
-              placeholderTextColor="#888"
-              value={confirmationCode}
-              onChangeText={setConfirmationCode}
-            />
-            <Button title="Confirm" onPress={handleConfirmSignUp} />
-            <Text>*check your email</Text>
+      <View className="bg-app-white-100 w-full">
+        <Image
+          source={require("@/assets/images/app-ressources/register-img.webp")}
+          className="bg-cover w-full mt-32 "
+        />
+      </View>
+      <View className="z-10 absolute bg-app-white-100 top-[180px] w-11/12 p-4 rounded-3xl">
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isConfirmModalVisible}
+          onRequestClose={() => {
+            setIsConfirmModalVisible(false);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text>Enter Confirmation Code</Text>
+              <TextInput
+                style={globalStyles.lightInput}
+                placeholder="Confirmation Code"
+                placeholderTextColor="#888"
+                value={confirmationCode}
+                onChangeText={setConfirmationCode}
+              />
+              <Button title="Confirm" onPress={handleConfirmSignUp} />
+              <Text>*check your email</Text>
+            </View>
           </View>
+        </Modal>
+        <Text className="text-center text-2xl mb-4">Sign Up</Text>
+        <TextInput
+          style={globalStyles.lightInput}
+          placeholder="Username"
+          placeholderTextColor="#888"
+          onChangeText={(text) => setUsername(text)}
+          value={username}
+        />
+        <TextInput
+          style={globalStyles.lightInput}
+          placeholder="Password"
+          placeholderTextColor="#888"
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          secureTextEntry
+        />
+        {/* <Button title="Sign Up" onPress={handleSignUp} /> */}
+        <View className="w-1/2 m-auto mb-2">
+          <ButtonComponent
+            onPress={handleSignUp}
+            title="Sign Up"
+            secondary={false}
+            white={false}
+          />
         </View>
-      </Modal>
-      <Text>Sign Up</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        placeholderTextColor="#888"
-        onChangeText={(text) => setUsername(text)}
-        value={username}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#888"
-        onChangeText={(text) => setPassword(text)}
-        value={password}
-        secureTextEntry
-      />
-      <Button title="Sign Up" onPress={handleSignUp} />
-      <Button
-        title="Already have an account? Sign In"
-        onPress={() => navigation.navigate("SignIn")}
-      />
+        <Button
+          title="Already have an account? Sign In"
+          color={"#03050C"}
+          onPress={() => navigation.navigate("SignIn")}
+        />
+      </View>
     </View>
   );
 };
@@ -102,7 +111,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    width: "80%",
+    width: "100%",
     marginBottom: 10,
     padding: 10,
     borderColor: "gray",
