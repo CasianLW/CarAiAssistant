@@ -13,8 +13,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "@/app/_layout";
 import { useNavigation } from "@react-navigation/native";
 import ButtonComponent from "./general/button-component";
-import useForgotPassword from "@/hooks/use-forgot-password";
-import globalStyles from "@/styles/globalStyles";
+import useForgotPassword from "@/hooks/use-forgot-password.hook";
+import globalStyles from "@/styles/global.styles";
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
 const ForgotPasswordScreen: FC = () => {

@@ -14,8 +14,8 @@ import { AuthStackParamList } from "@/app/_layout";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useAuth } from "@/context/auth-context";
 import ButtonComponent from "./general/button-component";
-import useSignUp from "@/hooks/use-sign-up";
-import globalStyles from "@/styles/globalStyles";
+import useSignUp from "@/hooks/use-sign-up.hook";
+import globalStyles from "@/styles/global.styles";
 
 type SignUpNavigationProp = StackNavigationProp<AuthStackParamList, "SignUp">;
 

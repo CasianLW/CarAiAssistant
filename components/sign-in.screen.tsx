@@ -14,10 +14,10 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "@/app/_layout";
 
-import globalStyles from "@/styles/globalStyles";
+import globalStyles from "@/styles/global.styles";
 import { LinearGradient } from "expo-linear-gradient";
 import ButtonComponent from "./general/button-component";
-import useSignIn from "@/hooks/use-sign-in";
+import useSignIn from "@/hooks/use-sign-in.hook";
 
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
