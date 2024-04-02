@@ -50,7 +50,7 @@ yarn install
 expo start
 ```
 
-\*or if command not working try:
+\*or if command not working try (in my case i am using npm start):
 
 ```bash
 npm start
