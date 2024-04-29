@@ -24,6 +24,8 @@ import { AuthProvider } from "@/context/auth-context";
 // import Amplify from 'aws-amplify';
 import config from "../amplifyconfiguration"; // Adjust the path to where your amplifyconfiguration.js is located
 import { Amplify } from "aws-amplify";
+import { Provider } from "react-redux";
+import store from "@/stores/main-store";
 
 // Amplify.configure(config);
 Amplify.configure(config);
@@ -80,7 +82,8 @@ export default function RootLayout() {
 
   // return <RootLayoutNav />;
   return (
-    <AuthProvider>
+    // <AuthProvider>
+    <Provider store={store}>
       <NavigationContainer independent={true}>
         {isAuthenticated ? (
           <MainAppNavigator setIsAuthenticated={setIsAuthenticated} />
@@ -89,7 +92,8 @@ export default function RootLayout() {
         )}
         {/* <RootLayoutNav /> */}
       </NavigationContainer>
-    </AuthProvider>
+    </Provider>
+    /* </AuthProvider> */
   );
 }
 

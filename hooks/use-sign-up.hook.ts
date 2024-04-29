@@ -3,7 +3,9 @@ import { Auth } from "aws-amplify";
 import { useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "@/app/_layout";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useAuth } from "@/context/auth-context";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/stores/slices/auth-slice";
+// import { useAuth } from "@/context/auth-context";
 
 type SignUpNavigationProp = StackNavigationProp<AuthStackParamList, "SignUp">;
 
@@ -12,7 +14,8 @@ const useSignUp = (setIsAuthenticated: (value: boolean) => void) => {
   const [password, setPassword] = useState("");
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
   const [confirmationCode, setConfirmationCode] = useState("");
-  const { setUser } = useAuth();
+  // const { setUser } = useAuth();
+  const dispatch = useDispatch();
 
   const handleSignUp = async () => {
     try {
@@ -27,7 +30,9 @@ const useSignUp = (setIsAuthenticated: (value: boolean) => void) => {
     try {
       await Auth.confirmSignUp(username, confirmationCode);
       const user = await Auth.signIn(username, password);
-      setUser(user);
+      // setUser(user);
+      dispatch(setUser(user));
+
       setIsAuthenticated(true);
     } catch (error) {
       console.error("Error confirming sign up:", error);
