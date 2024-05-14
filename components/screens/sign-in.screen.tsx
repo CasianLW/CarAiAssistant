@@ -15,8 +15,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "@/app/_layout";
 
 import globalStyles from "@/styles/global.styles";
-import { LinearGradient } from "expo-linear-gradient";
-import ButtonComponent from "./general/button-component";
+import ButtonComponent from "../general/button-component";
 import useSignIn from "@/hooks/use-sign-in.hook";
 
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
@@ -105,47 +104,14 @@ const SignInScreen: FC<SigninScreenProps> = ({ setIsAuthenticated }) => {
             white={false}
             title="Don't have an account? Sign Up"
           />
-          {/* <Pressable
+        </View>
+        <View className="mb-44 mt-4 ">
+          <ButtonComponent
             onPress={() => navigation.navigate("SignUp")}
-            style={({ pressed }) => [
-              {
-                // backgroundColor: pressed ? '#DDDDDD' : 'transparent',
-                opacity: pressed ? 0.8 : 1,
-              }, // Your existing styles
-            ]}
-          >
-            {({ pressed }) => (
-              <LinearGradient
-                colors={["#CB9684", "#895442", "#CB9684"]}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 0.5 }}
-                style={{ borderRadius: 10, overflow: "hidden", padding: 1 }}
-              >
-                <LinearGradient
-                  colors={
-                    !pressed
-                      ? ["#895442", "#CB9684", "#895442"]
-                      : ["#03050C", "#03050C", "#03050C"]
-                  }
-                  // colors={["#895442", "#CB9684", "#895442"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={{
-                    padding: 15,
-                    borderRadius: 9,
-                    backgroundColor: "#03050C ",
-                  }}
-                >
-                  <Text
-                    className="font-semibold"
-                    style={{ textAlign: "center", color: "#fff" }}
-                  >
-                    Don't have an account? Sign Up
-                  </Text>
-                </LinearGradient>
-              </LinearGradient>
-            )}
-          </Pressable> */}
+            secondary={true}
+            white={false}
+            title="Continuer sans compte"
+          />
         </View>
       </View>
     </View>

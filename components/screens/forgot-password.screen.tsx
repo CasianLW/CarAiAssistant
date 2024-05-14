@@ -12,7 +12,7 @@ import { Auth } from "aws-amplify";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "@/app/_layout";
 import { useNavigation } from "@react-navigation/native";
-import ButtonComponent from "./general/button-component";
+import ButtonComponent from "../general/button-component";
 import useForgotPassword from "@/hooks/use-forgot-password.hook";
 import globalStyles from "@/styles/global.styles";
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;

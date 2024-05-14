@@ -13,7 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "@/app/_layout";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useAuth } from "@/context/auth-context";
-import ButtonComponent from "./general/button-component";
+import ButtonComponent from "../general/button-component";
 import useSignUp from "@/hooks/use-sign-up.hook";
 import globalStyles from "@/styles/global.styles";
 

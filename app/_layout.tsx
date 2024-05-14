@@ -14,9 +14,9 @@ import * as SplashScreen from "expo-splash-screen";
 import { FC, useEffect, useState } from "react";
 
 import { useColorScheme } from "@/components/use-color-scheme";
-import SignInScreen from "@/components/sign-in.screen";
-import SignUpScreen from "@/components/sign-up.screen";
-import ForgotPasswordScreen from "@/components/forgot-password.screen";
+import SignInScreen from "@/components/screens/sign-in.screen";
+import SignUpScreen from "@/components/screens/sign-up.screen";
+import ForgotPasswordScreen from "@/components/screens/forgot-password.screen";
 import HomeScreen from "@/components/tabs/home-screen.tab";
 import ProfileScreen from "@/components/tabs/profile-screen.tab";
 import { AuthProvider } from "@/context/auth-context";
