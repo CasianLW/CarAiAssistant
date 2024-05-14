@@ -28,6 +28,7 @@ import { Provider } from "react-redux";
 import store from "@/stores/main-store";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/helpers/query-client";
+import "react-native-reanimated";
 
 // Amplify.configure(config);
 Amplify.configure(config);
