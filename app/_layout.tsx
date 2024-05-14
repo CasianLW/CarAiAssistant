@@ -26,6 +26,8 @@ import config from "../amplifyconfiguration"; // Adjust the path to where your a
 import { Amplify } from "aws-amplify";
 import { Provider } from "react-redux";
 import store from "@/stores/main-store";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/helpers/query-client";
 
 // Amplify.configure(config);
 Amplify.configure(config);
@@ -83,16 +85,18 @@ export default function RootLayout() {
   // return <RootLayoutNav />;
   return (
     // <AuthProvider>
-    <Provider store={store}>
-      <NavigationContainer independent={true}>
-        {isAuthenticated ? (
-          <MainAppNavigator setIsAuthenticated={setIsAuthenticated} />
-        ) : (
-          <AuthNavigator setIsAuthenticated={setIsAuthenticated} />
-        )}
-        {/* <RootLayoutNav /> */}
-      </NavigationContainer>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <NavigationContainer independent={true}>
+          {isAuthenticated ? (
+            <MainAppNavigator setIsAuthenticated={setIsAuthenticated} />
+          ) : (
+            <AuthNavigator setIsAuthenticated={setIsAuthenticated} />
+          )}
+          {/* <RootLayoutNav /> */}
+        </NavigationContainer>
+      </Provider>
+    </QueryClientProvider>
     /* </AuthProvider> */
   );
 }
