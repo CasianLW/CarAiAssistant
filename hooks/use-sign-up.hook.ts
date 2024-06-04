@@ -9,7 +9,7 @@ import { setUser } from "@/stores/slices/auth-slice";
 
 type SignUpNavigationProp = StackNavigationProp<AuthStackParamList, "SignUp">;
 
-const useSignUp = (setIsAuthenticated: (value: boolean) => void) => {
+const useSignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
@@ -33,7 +33,7 @@ const useSignUp = (setIsAuthenticated: (value: boolean) => void) => {
       // setUser(user);
       dispatch(setUser(user));
 
-      setIsAuthenticated(true);
+      // setIsAuthenticated(true);
     } catch (error) {
       console.error("Error confirming sign up:", error);
     } finally {
