@@ -18,7 +18,7 @@ type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 type HomeScreenProps = {
   setIsAuthenticated: (value: boolean) => void;
 };
-const HomeScreen: FC<HomeScreenProps> = ({ setIsAuthenticated }) => {
+const HomeScreen: FC = () => {
   // const [make, setMake] = useState("");
   // const { data, error, isLoading } = useQuery({
   //   queryKey: ["vehicles", make],
@@ -39,8 +39,6 @@ const HomeScreen: FC<HomeScreenProps> = ({ setIsAuthenticated }) => {
       await Auth.signOut(); // Sign out of the Auth module
       // Reset the navigation state to the Auth stack
       dispatch(clearUser());
-
-      setIsAuthenticated(false);
     } catch (error) {
       console.error("Error signing out: ", error); // Handle sign-out errors heres
     }

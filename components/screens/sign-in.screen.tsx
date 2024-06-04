@@ -17,13 +17,12 @@ import { AuthStackParamList } from "@/app/_layout";
 import globalStyles from "@/styles/global.styles";
 import ButtonComponent from "../general/button-component";
 import useSignIn from "@/hooks/use-sign-in.hook";
+import { logAsGuest } from "@/stores/slices/auth-slice";
+import { useDispatch } from "react-redux";
 
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
-type SigninScreenProps = {
-  setIsAuthenticated: (value: boolean) => void;
-};
-const SignInScreen: FC<SigninScreenProps> = ({ setIsAuthenticated }) => {
+const SignInScreen: FC = () => {
   const {
     username,
     setUsername,
@@ -31,16 +30,17 @@ const SignInScreen: FC<SigninScreenProps> = ({ setIsAuthenticated }) => {
     setPassword,
     isSigningIn,
     handleSignIn,
-  } = useSignIn(setIsAuthenticated);
+  } = useSignIn();
   const navigation = useNavigation<SignInNavigationProp>();
+  const dispatch = useDispatch();
 
   return (
     <View className={"bg-app-black-200 "} style={styles.container}>
       <View className="bg-app-white-100 w-full ">
-        <Image
+        {/* <Image
           source={require("@/assets/images/app-ressources/login-image.webp")}
           className="bg-cover w-full mt-44 "
-        />
+        /> */}
       </View>
       <View className="absolute z-10 w-11/12 top-[180px]">
         <View className="bg-app-white-100 mt-auto  rounded-3xl p-4">
@@ -107,7 +107,9 @@ const SignInScreen: FC<SigninScreenProps> = ({ setIsAuthenticated }) => {
         </View>
         <View className="mb-44 mt-4 ">
           <ButtonComponent
-            onPress={() => navigation.navigate("SignUp")}
+            onPress={() => {
+              dispatch(logAsGuest());
+            }}
             secondary={true}
             white={false}
             title="Continuer sans compte"

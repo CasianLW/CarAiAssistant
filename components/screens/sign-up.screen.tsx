@@ -19,10 +19,7 @@ import globalStyles from "@/styles/global.styles";
 
 type SignUpNavigationProp = StackNavigationProp<AuthStackParamList, "SignUp">;
 
-type SignUpScreenProps = {
-  setIsAuthenticated: (value: boolean) => void;
-};
-const SignUpScreen: FC<SignUpScreenProps> = ({ setIsAuthenticated }) => {
+const SignUpScreen: FC = () => {
   const navigation = useNavigation<SignUpNavigationProp>();
   const {
     username,
@@ -35,7 +32,7 @@ const SignUpScreen: FC<SignUpScreenProps> = ({ setIsAuthenticated }) => {
     setConfirmationCode,
     handleSignUp,
     handleConfirmSignUp,
-  } = useSignUp(setIsAuthenticated);
+  } = useSignUp();
 
   return (
     <View style={styles.container}>
