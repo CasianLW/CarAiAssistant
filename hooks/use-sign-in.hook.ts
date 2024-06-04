@@ -6,15 +6,20 @@ import { AuthStackParamList } from "@/app/_layout";
 import { useAuth } from "@/context/auth-context";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/stores/slices/auth-slice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores/main-store";
 
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
-const useSignIn = (setIsAuthenticated: (value: boolean) => void) => {
+const useSignIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   // const { setUser } = useAuth();
   const [isSigningIn, setIsSigningIn] = useState(false);
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
 
   const handleSignIn = async () => {
     if (isSigningIn) return;
@@ -30,7 +35,6 @@ const useSignIn = (setIsAuthenticated: (value: boolean) => void) => {
       };
       // console.log("User data", userData);
       dispatch(setUser(userData));
-      setIsAuthenticated(true);
     } catch (error) {
       console.error("Sign in error", error);
     } finally {
