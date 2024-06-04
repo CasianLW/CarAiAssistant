@@ -2,16 +2,20 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
   DarkTheme,
   DefaultTheme,
+  EventArg,
   NavigationContainer,
   ThemeProvider,
+  useFocusEffect,
 } from "@react-navigation/native";
+import { BottomTabNavigationEventMap } from "@react-navigation/bottom-tabs";
+
 import { useFonts } from "expo-font";
 // import { Stack } from "expo-router";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import * as SplashScreen from "expo-splash-screen";
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 
 import { useColorScheme } from "@/components/use-color-scheme";
 import SignInScreen from "@/components/screens/sign-in.screen";
@@ -24,11 +28,14 @@ import { AuthProvider } from "@/context/auth-context";
 // import Amplify from 'aws-amplify';
 import config from "../amplifyconfiguration"; // Adjust the path to where your amplifyconfiguration.js is located
 import { Amplify } from "aws-amplify";
-import { Provider } from "react-redux";
-import store from "@/stores/main-store";
+import { Provider, useSelector } from "react-redux";
+import store, { RootState } from "@/stores/main-store";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/helpers/query-client";
 import "react-native-reanimated";
+import { clearUser, setUser } from "@/stores/slices/auth-slice";
+import { useDispatch } from "react-redux";
+import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
 
 // Amplify.configure(config);
 Amplify.configure(config);
@@ -52,17 +59,27 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated, isGuest } = useSelector(
+    (state: RootState) => state.auth
+  );
+
   // Dummy authentication check function
   useEffect(() => {
     // Actual check for current authenticated user
     const checkAuth = async () => {
       try {
-        await Amplify.Auth.currentAuthenticatedUser();
-        setIsAuthenticated(true);
+        const user = await Amplify.Auth.currentAuthenticatedUser();
+        const userData = {
+          email: user.attributes.email,
+          emailVerified: user.attributes.email_verified,
+          userId: user.username,
+        };
+        dispatch(setUser(userData));
       } catch (error) {
-        // Not authenticated
-        setIsAuthenticated(false);
+        dispatch(clearUser());
       }
     };
 
@@ -85,20 +102,16 @@ export default function RootLayout() {
 
   // return <RootLayoutNav />;
   return (
-    // <AuthProvider>
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <NavigationContainer independent={true}>
-          {isAuthenticated ? (
-            <MainAppNavigator setIsAuthenticated={setIsAuthenticated} />
-          ) : (
-            <AuthNavigator setIsAuthenticated={setIsAuthenticated} />
-          )}
-          {/* <RootLayoutNav /> */}
-        </NavigationContainer>
-      </Provider>
-    </QueryClientProvider>
-    /* </AuthProvider> */
+    <NavigationContainer independent={true}>
+      {isAuthenticated ? (
+        <MainAppNavigator />
+      ) : isGuest ? (
+        <GuestAppNavigator />
+      ) : (
+        <AuthNavigator />
+      )}
+      {/* <RootLayoutNav /> */}
+    </NavigationContainer>
   );
 }
 
@@ -114,6 +127,7 @@ export type AuthStackParamList = {
 type MainTabParamList = {
   Home: undefined;
   Profile: undefined;
+  Login: undefined;
 };
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -148,17 +162,15 @@ const MainTab = createBottomTabNavigator<MainTabParamList>();
 //     </ThemeProvider>
 //   );
 // }
-const AuthNavigator: FC<{
-  setIsAuthenticated: (value: boolean) => void;
-}> = ({ setIsAuthenticated }) => {
+const AuthNavigator: FC = () => {
   return (
     <AuthStack.Navigator screenOptions={{ headerShown: false }}>
       {/* <AuthStack.Screen name="SignIn" component={SignInScreen} /> */}
       <AuthStack.Screen name="SignIn">
-        {() => <SignInScreen setIsAuthenticated={setIsAuthenticated} />}
+        {() => <SignInScreen />}
       </AuthStack.Screen>
       <AuthStack.Screen name="SignUp">
-        {() => <SignUpScreen setIsAuthenticated={setIsAuthenticated} />}
+        {() => <SignUpScreen />}
       </AuthStack.Screen>
       {/* <AuthStack.Screen name="SignUp" component={SignUpScreen} /> */}
       <AuthStack.Screen
@@ -169,17 +181,49 @@ const AuthNavigator: FC<{
     </AuthStack.Navigator>
   );
 };
-const MainAppNavigator: FC<{
-  setIsAuthenticated: (value: boolean) => void;
-}> = ({ setIsAuthenticated }) => {
+const MainAppNavigator: FC = () => {
   return (
     <MainTab.Navigator>
       {/* <MainTab.Screen name="Home" component={HomeScreen} /> */}
-      <MainTab.Screen name="Home">
-        {() => <HomeScreen setIsAuthenticated={setIsAuthenticated} />}
-      </MainTab.Screen>
+      <MainTab.Screen name="Home">{() => <HomeScreen />}</MainTab.Screen>
       <MainTab.Screen name="Profile" component={ProfileScreen} />
       {/* Add more MainTabs as needed */}
     </MainTab.Navigator>
   );
+};
+
+const GuestAppNavigator: FC = () => {
+  const dispatch = useDispatch();
+  const handleLoginTabPress = (event: EventArg<"tabPress">) => {
+    dispatch(clearUser());
+  };
+
+  return (
+    <MainTab.Navigator>
+      <MainTab.Screen name="Home">{() => <HomeScreen />}</MainTab.Screen>
+      <MainTab.Screen
+        name="Login"
+        component={SignInScreen}
+        listeners={({ navigation }) => ({
+          tabPress: (event) => {
+            handleLoginTabPress(event);
+            navigation.navigate("Login");
+          },
+        })}
+      />
+    </MainTab.Navigator>
+  );
+};
+
+const LoginScreenWithClearUser: FC = () => {
+  const dispatch = useDispatch();
+  dispatch(clearUser());
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     dispatch(clearUser());
+  //   }, [dispatch])
+  // );
+
+  return <SignInScreen />;
 };
