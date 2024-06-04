@@ -9,11 +9,13 @@ interface AuthState {
     userId: string;
   } | null;
   isAuthenticated: boolean;
+  isGuest: boolean;
 }
 
 const initialState: AuthState = {
   userData: null,
   isAuthenticated: false,
+  isGuest: false,
 };
 
 const authSlice = createSlice({
@@ -23,13 +25,20 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<AuthState["userData"]>) => {
       state.userData = action.payload;
       state.isAuthenticated = true;
+      state.isGuest = false;
     },
     clearUser: (state) => {
       state.userData = null;
       state.isAuthenticated = false;
+      state.isGuest = false;
+    },
+    logAsGuest: (state) => {
+      state.userData = null;
+      state.isAuthenticated = false;
+      state.isGuest = true;
     },
   },
 });
 
-export const { setUser, clearUser } = authSlice.actions;
+export const { setUser, clearUser, logAsGuest } = authSlice.actions;
 export default authSlice.reducer;
