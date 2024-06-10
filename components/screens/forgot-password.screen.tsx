@@ -36,10 +36,10 @@ const ForgotPasswordScreen: FC = () => {
     <View style={styles.container}>
       <View className="bg-app-black-300 w-full -z-20 ">
         <Text>Test</Text>
-        <Image
+        {/* <Image
           source={require("@/assets/images/app-ressources/forgot-pwd-img.webp")}
           className="bg-cover  w-full mt-36"
-        />
+        /> */}
       </View>
       <View className="z-10 absolute bg-app-white-100 w-11/12 p-4 rounded-3xl top-[180px]">
         <Modal

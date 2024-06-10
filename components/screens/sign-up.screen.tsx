@@ -37,10 +37,10 @@ const SignUpScreen: FC = () => {
   return (
     <View style={styles.container}>
       <View className="bg-app-white-100 w-full">
-        <Image
+        {/* <Image
           source={require("@/assets/images/app-ressources/register-img.webp")}
           className="bg-cover w-full mt-32 "
-        />
+        /> */}
       </View>
       <View className="z-10 absolute bg-app-white-100 top-[180px] w-11/12 p-4 rounded-3xl">
         <Modal
