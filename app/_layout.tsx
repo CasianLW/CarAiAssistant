@@ -2,73 +2,108 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {
   DarkTheme,
   DefaultTheme,
-  EventArg,
   NavigationContainer,
-  ThemeProvider,
-  useFocusEffect,
 } from "@react-navigation/native";
-import { BottomTabNavigationEventMap } from "@react-navigation/bottom-tabs";
-
-import { useFonts } from "expo-font";
-// import { Stack } from "expo-router";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import * as SplashScreen from "expo-splash-screen";
-import { FC, useCallback, useEffect, useState } from "react";
-
-import { useColorScheme } from "@/components/use-color-scheme";
+import React, { FC, useEffect, useState } from "react";
+import { useFonts } from "expo-font";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/stores/main-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Amplify } from "aws-amplify";
+import config from "../amplifyconfiguration";
 import SignInScreen from "@/components/screens/sign-in.screen";
 import SignUpScreen from "@/components/screens/sign-up.screen";
 import ForgotPasswordScreen from "@/components/screens/forgot-password.screen";
 import HomeScreen from "@/components/tabs/home-screen.tab";
 import ProfileScreen from "@/components/tabs/profile-screen.tab";
-import { AuthProvider } from "@/context/auth-context";
-
-// import Amplify from 'aws-amplify';
-import config from "../amplifyconfiguration"; // Adjust the path to where your amplifyconfiguration.js is located
-import { Amplify } from "aws-amplify";
-import { Provider, useSelector } from "react-redux";
-import store, { RootState } from "@/stores/main-store";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "@/helpers/query-client";
 import "react-native-reanimated";
 import { clearUser, setUser } from "@/stores/slices/auth-slice";
-import { useDispatch } from "react-redux";
-import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
+import OnboardingScreen from "@/components/screens/onboarding.screen";
 
-// Amplify.configure(config);
 Amplify.configure(config);
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
+const AuthStack = createNativeStackNavigator<AuthStackParamList>();
+const MainTab = createBottomTabNavigator<MainTabParamList>();
 
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
+export type AuthStackParamList = {
+  SignIn: undefined;
+  SignUp: undefined;
+  ForgotPassword: undefined;
+  Onboarding: undefined;
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+type MainTabParamList = {
+  Home: undefined;
+  Profile: undefined;
+  Login: undefined;
+};
 
-export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    ...FontAwesome.font,
-  });
+const AuthNavigator: FC<{ hasOnboarded: boolean }> = ({ hasOnboarded }) => (
+  <AuthStack.Navigator
+    initialRouteName={hasOnboarded ? "SignIn" : "Onboarding"}
+    screenOptions={{ headerShown: false }}
+  >
+    <AuthStack.Screen name="SignIn" component={SignInScreen} />
+    <AuthStack.Screen name="SignUp" component={SignUpScreen} />
+    <AuthStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+    <AuthStack.Screen name="Onboarding" component={OnboardingScreen} />
+  </AuthStack.Navigator>
+);
 
-  const dispatch = useDispatch<ThunkDispatch<RootState, unknown, AnyAction>>();
+const MainAppNavigator: FC = () => (
+  <MainTab.Navigator>
+    <MainTab.Screen name="Home" component={HomeScreen} />
+    <MainTab.Screen name="Profile" component={ProfileScreen} />
+  </MainTab.Navigator>
+);
 
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+const GuestAppNavigator: FC = () => {
+  const dispatch = useDispatch();
+  const handleLoginTabPress = (event: { defaultPrevented: boolean }) => {
+    dispatch(clearUser());
+    event.defaultPrevented = true;
+  };
+
+  return (
+    <MainTab.Navigator>
+      <MainTab.Screen name="Home" component={HomeScreen} />
+      <MainTab.Screen
+        name="Login"
+        component={SignInScreen}
+        listeners={({ navigation }) => ({
+          tabPress: (event) => {
+            handleLoginTabPress(event);
+            navigation.navigate("Login");
+          },
+        })}
+      />
+    </MainTab.Navigator>
+  );
+};
+
+const RootLayout: FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasOnboarded, setHasOnboarded] = useState(false);
   const { isAuthenticated, isGuest } = useSelector(
     (state: RootState) => state.auth
   );
+  const dispatch = useDispatch();
 
-  // Dummy authentication check function
   useEffect(() => {
-    // Actual check for current authenticated user
+    const checkOnboarding = async () => {
+      const onboarded = await AsyncStorage.getItem("hasOnboarded");
+      // console.log("Onboarding status from AsyncStorage:", onboarded); // Debug
+      setHasOnboarded(onboarded === "true");
+      setIsLoading(false);
+    };
+
+    checkOnboarding();
+  }, []);
+
+  useEffect(() => {
     const checkAuth = async () => {
       try {
         const user = await Amplify.Auth.currentAuthenticatedUser();
@@ -85,7 +120,12 @@ export default function RootLayout() {
 
     checkAuth();
   }, []);
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
+
+  const [loaded, error] = useFonts({
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    ...FontAwesome.font,
+  });
+
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -96,11 +136,12 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
+  if (!loaded || isLoading) {
+    return null; // or a loading spinner
   }
 
-  // return <RootLayoutNav />;
+  // console.log("hasOnboarded:", hasOnboarded); // Debug
+
   return (
     <NavigationContainer independent={true}>
       {isAuthenticated ? (
@@ -108,122 +149,10 @@ export default function RootLayout() {
       ) : isGuest ? (
         <GuestAppNavigator />
       ) : (
-        <AuthNavigator />
+        <AuthNavigator hasOnboarded={hasOnboarded} />
       )}
-      {/* <RootLayoutNav /> */}
     </NavigationContainer>
   );
-}
-
-// const Tab = createBottomTabNavigator();
-// const Stack = createNativeStackNavigator();
-
-export type AuthStackParamList = {
-  SignIn: undefined;
-  SignUp: undefined;
-  ForgotPassword: undefined;
 };
 
-type MainTabParamList = {
-  Home: undefined;
-  Profile: undefined;
-  Login: undefined;
-};
-
-const AuthStack = createNativeStackNavigator<AuthStackParamList>();
-const MainTab = createBottomTabNavigator<MainTabParamList>();
-
-// function RootLayoutNav() {
-//   const colorScheme = useColorScheme();
-
-//   return (
-//     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-//       <Stack.Navigator
-//         initialRouteName="(tabs)"
-//         screenOptions={{ headerShown: false }}
-//       >
-//         <Stack.Screen name="(tabs)" component={MainAppNavigator} />
-//         <Stack.Screen
-//           name="SignIn"
-//           component={SignInScreen}
-//           options={{ title: "Sign In" }}
-//         />
-//         <Stack.Screen
-//           name="SignUp"
-//           component={SignUpScreen}
-//           options={{ title: "Sign Up" }}
-//         />
-//         <Stack.Screen
-//           name="ForgotPassword"
-//           component={ForgotPasswordScreen}
-//           options={{ title: "Forgot Password" }}
-//         />
-//       </Stack.Navigator>
-//     </ThemeProvider>
-//   );
-// }
-const AuthNavigator: FC = () => {
-  return (
-    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-      {/* <AuthStack.Screen name="SignIn" component={SignInScreen} /> */}
-      <AuthStack.Screen name="SignIn">
-        {() => <SignInScreen />}
-      </AuthStack.Screen>
-      <AuthStack.Screen name="SignUp">
-        {() => <SignUpScreen />}
-      </AuthStack.Screen>
-      {/* <AuthStack.Screen name="SignUp" component={SignUpScreen} /> */}
-      <AuthStack.Screen
-        name="ForgotPassword"
-        component={ForgotPasswordScreen}
-      />
-      {/* Add more auth screens as needed */}
-    </AuthStack.Navigator>
-  );
-};
-const MainAppNavigator: FC = () => {
-  return (
-    <MainTab.Navigator>
-      {/* <MainTab.Screen name="Home" component={HomeScreen} /> */}
-      <MainTab.Screen name="Home">{() => <HomeScreen />}</MainTab.Screen>
-      <MainTab.Screen name="Profile" component={ProfileScreen} />
-      {/* Add more MainTabs as needed */}
-    </MainTab.Navigator>
-  );
-};
-
-const GuestAppNavigator: FC = () => {
-  const dispatch = useDispatch();
-  const handleLoginTabPress = (event: EventArg<"tabPress">) => {
-    dispatch(clearUser());
-  };
-
-  return (
-    <MainTab.Navigator>
-      <MainTab.Screen name="Home">{() => <HomeScreen />}</MainTab.Screen>
-      <MainTab.Screen
-        name="Login"
-        component={SignInScreen}
-        listeners={({ navigation }) => ({
-          tabPress: (event) => {
-            handleLoginTabPress(event);
-            navigation.navigate("Login");
-          },
-        })}
-      />
-    </MainTab.Navigator>
-  );
-};
-
-const LoginScreenWithClearUser: FC = () => {
-  const dispatch = useDispatch();
-  dispatch(clearUser());
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     dispatch(clearUser());
-  //   }, [dispatch])
-  // );
-
-  return <SignInScreen />;
-};
+export default RootLayout;
