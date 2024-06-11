@@ -33,6 +33,14 @@ export default StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
+  arrowBack: {
+    position: "absolute",
+    width: 40,
+    height: 40,
+    top: 52,
+    left: 16,
+    zIndex: 10,
+  },
   title: {
     fontFamily: "UrbanistSemiBold600",
     fontSize: 24,
