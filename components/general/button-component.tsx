@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     maxWidth: "100%",
     fontFamily: "UrbanistMedium500",
+    // flex: 1,
   },
   buttonText: {
     fontSize: 20,
