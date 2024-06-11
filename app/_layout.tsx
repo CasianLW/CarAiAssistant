@@ -122,7 +122,30 @@ const RootLayout: FC = () => {
   }, []);
 
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    // SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    // Urbanist: require("../assets/fonts/Urbanist-VariableFont_wght.ttf"),
+    // UrbanistItalic: require("../assets/fonts/Urbanist-Italic-VariableFont_wght.ttf"),
+    UrbanistBlack900: require("../assets/fonts/Urbanist-Black.ttf"),
+    UrbanistBlackItalic900: require("../assets/fonts/Urbanist-BlackItalic.ttf"),
+    UrbanistBold700: require("../assets/fonts/Urbanist-Bold.ttf"),
+    UrbanistBoldItalic700: require("../assets/fonts/Urbanist-BoldItalic.ttf"),
+    UrbanistExtraBold800: require("../assets/fonts/Urbanist-ExtraBold.ttf"),
+    UrbanistExtraBoldItalic800: require("../assets/fonts/Urbanist-ExtraBoldItalic.ttf"),
+    UrbanistExtraLight200: require("../assets/fonts/Urbanist-ExtraLight.ttf"),
+    UrbanistExtraLightItalic200: require("../assets/fonts/Urbanist-ExtraLightItalic.ttf"),
+    UrbanistItalicVariable: require("../assets/fonts/Urbanist-Italic-VariableFont_wght.ttf"),
+    UrbanistItalic400: require("../assets/fonts/Urbanist-Italic.ttf"),
+    UrbanistLight300: require("../assets/fonts/Urbanist-Light.ttf"),
+    UrbanistLightItalic300: require("../assets/fonts/Urbanist-LightItalic.ttf"),
+    UrbanistMedium500: require("../assets/fonts/Urbanist-Medium.ttf"),
+    UrbanistMediumItalic500: require("../assets/fonts/Urbanist-MediumItalic.ttf"),
+    UrbanistRegular400: require("../assets/fonts/Urbanist-Regular.ttf"),
+    UrbanistSemiBold600: require("../assets/fonts/Urbanist-SemiBold.ttf"),
+    UrbanistSemiBoldItalic600: require("../assets/fonts/Urbanist-SemiBoldItalic.ttf"),
+    UrbanistThin100: require("../assets/fonts/Urbanist-Thin.ttf"),
+    UrbanistThinItalic100: require("../assets/fonts/Urbanist-ThinItalic.ttf"),
+    UrbanistVariable: require("../assets/fonts/Urbanist-VariableFont_wght.ttf"),
+
     ...FontAwesome.font,
   });
 
