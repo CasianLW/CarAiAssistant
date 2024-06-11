@@ -35,8 +35,8 @@ export default StyleSheet.create({
   },
   arrowBack: {
     position: "absolute",
-    width: 40,
-    height: 40,
+    width: 42,
+    height: 42,
     top: 52,
     left: 16,
     zIndex: 10,
