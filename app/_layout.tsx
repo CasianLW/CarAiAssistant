@@ -166,7 +166,7 @@ const RootLayout: FC = () => {
   // console.log("hasOnboarded:", hasOnboarded); // Debug
 
   return (
-    <NavigationContainer independent={true}>
+    <NavigationContainer independent={true} theme={AppTheme}>
       {isAuthenticated ? (
         <MainAppNavigator />
       ) : isGuest ? (
@@ -179,3 +179,11 @@ const RootLayout: FC = () => {
 };
 
 export default RootLayout;
+
+const AppTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: "#FFFFFF",
+  },
+};
