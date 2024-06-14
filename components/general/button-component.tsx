@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 25,
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: 8,
     maxWidth: "100%",
     fontFamily: "UrbanistMedium500",
     height: 52,
