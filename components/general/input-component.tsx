@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     // borderColor: "#ccc",
     borderRadius: 16,
     backgroundColor: "#EBF2FF",
-    marginVertical: 10,
+    marginVertical: 8,
   },
 
   defaultInput: {
