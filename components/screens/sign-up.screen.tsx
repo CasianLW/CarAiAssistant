@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Modal,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import { Auth } from "aws-amplify";
 import { useNavigation } from "@react-navigation/native";
@@ -16,6 +17,13 @@ import { useAuth } from "@/context/auth-context";
 import ButtonComponent from "../general/button-component";
 import useSignUp from "@/hooks/use-sign-up.hook";
 import globalStyles from "@/styles/global.styles";
+import InputComponent from "../general/input-component";
+import MailIcon from "@/assets/images/icons/mail.icon";
+import ProfileIcon from "@/assets/images/icons/profile.icon";
+import LockIcon from "@/assets/images/icons/lock.icon";
+import { useDispatch } from "react-redux";
+import { logAsGuest } from "@/stores/slices/auth-slice";
+import ExternalConnexionButtons from "../general/external-connexion-buttons-component";
 
 type SignUpNavigationProp = StackNavigationProp<AuthStackParamList, "SignUp">;
 
@@ -24,6 +32,7 @@ const SignUpScreen: FC = () => {
   const {
     username,
     setUsername,
+    setEmail,
     password,
     setPassword,
     isConfirmModalVisible,
@@ -33,16 +42,17 @@ const SignUpScreen: FC = () => {
     handleSignUp,
     handleConfirmSignUp,
   } = useSignUp();
+  const dispatch = useDispatch();
 
   return (
-    <View style={styles.container}>
+    <View style={globalStyles.screenRegistrationContainer}>
       <View className="bg-app-white-100 w-full">
         {/* <Image
           source={require("@/assets/images/app-ressources/register-img.webp")}
           className="bg-cover w-full mt-32 "
         /> */}
       </View>
-      <View className="z-10 absolute bg-app-white-100 top-[180px] w-11/12 p-4 rounded-3xl">
+      <View>
         <Modal
           animationType="slide"
           transparent={true}
@@ -66,36 +76,78 @@ const SignUpScreen: FC = () => {
             </View>
           </View>
         </Modal>
-        <Text className="text-center text-2xl mb-4">Sign Up</Text>
-        <TextInput
+        <Text
+          style={globalStyles.title}
+          className="text-app-black-300 mb-6 text-center"
+        >
+          Création de compte
+        </Text>
+        <Text
+          className="text-app-black-300 mb-6 mt-2 text-center"
+          style={globalStyles.subtitle}
+        >
+          Profitez de plus de fonctionnalités gratuites en vous connectant
+        </Text>
+        {/* <TextInput
           style={globalStyles.lightInput}
           placeholder="Username"
           placeholderTextColor="#888"
           onChangeText={(text) => setUsername(text)}
           value={username}
+        /> */}
+        <InputComponent
+          onChangeText={(text) => setUsername(text)}
+          placeholder="surnom"
+          value={username}
+          icon={<ProfileIcon fill="#808080" />}
         />
-        <TextInput
+        <InputComponent
+          onChangeText={(text) => setEmail(text)}
+          placeholder="monemain@mail.com"
+          value={username}
+          icon={<MailIcon fill="#808080" />}
+        />
+        {/* <TextInput
           style={globalStyles.lightInput}
           placeholder="Password"
           placeholderTextColor="#888"
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry
+        /> */}
+        <InputComponent
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          placeholder="*********"
+          secure={true}
+          icon={<LockIcon fill={"#808080"} />}
         />
         {/* <Button title="Sign Up" onPress={handleSignUp} /> */}
-        <View className="w-1/2 m-auto mb-2">
-          <ButtonComponent
-            onPress={handleSignUp}
-            title="Sign Up"
-            secondary={false}
-            white={false}
+        <ButtonComponent
+          onPress={handleSignUp}
+          title="Je crée mon compte !"
+          secondary={false}
+          white={false}
+        />
+        <View className="mt-2 mb-4">
+          <Button
+            title="J’ai déjà un compte !"
+            color={"#80AFFF"}
+            onPress={() => navigation.navigate("SignIn")}
           />
         </View>
-        <Button
-          title="Already have an account? Sign In"
-          color={"#03050C"}
-          onPress={() => navigation.navigate("SignIn")}
-        />
+        <ExternalConnexionButtons />
+        <Text className="text-center text-app-blue-300 text-base ">Ou</Text>
+
+        <TouchableOpacity
+          onPress={() => {
+            dispatch(logAsGuest());
+          }}
+        >
+          <Text className="text-xl text-center text-app-blue-200 underline mt-4">
+            Continuer sans compte
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
