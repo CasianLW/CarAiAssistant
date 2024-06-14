@@ -10,6 +10,7 @@ import { setUser } from "@/stores/slices/auth-slice";
 type SignUpNavigationProp = StackNavigationProp<AuthStackParamList, "SignUp">;
 
 const useSignUp = () => {
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
@@ -44,6 +45,7 @@ const useSignUp = () => {
   return {
     username,
     setUsername,
+    setEmail,
     password,
     setPassword,
     isConfirmModalVisible,
