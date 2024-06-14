@@ -1,13 +1,6 @@
 // src/components/screens/SignInScreen.tsx
 import React, { FC, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "@/app/_layout";
@@ -19,6 +12,8 @@ import { useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import InputComponent from "../general/input-component";
 import MailIcon from "@/assets/images/icons/mail.icon";
+import LockIcon from "@/assets/images/icons/lock.icon";
+import ExternalConnexionButtons from "../general/external-connexion-buttons-component";
 
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
@@ -62,7 +57,7 @@ const SignInScreen: FC = () => {
       <View className="">
         <View>
           <Text
-            className="text-app-black-300 mb-6 mt-2 text-center"
+            className="text-app-black-300 mb-6 text-center"
             style={globalStyles.title}
           >
             Connexion
@@ -85,7 +80,7 @@ const SignInScreen: FC = () => {
           /> */}
           <InputComponent
             onChangeText={(text) => setUsername(text)}
-            placeholder="youremail@mail.com"
+            placeholder="monemail@mail.com"
             value={username}
             icon={<MailIcon fill="#808080" />}
           />
@@ -103,42 +98,42 @@ const SignInScreen: FC = () => {
             value={password}
             placeholder="*********"
             secure={true}
-            icon={<MailIcon fill={"#808080"} />}
+            icon={<LockIcon fill={"#808080"} />}
           />
-          <View className="w-full m-auto">
-            <ButtonComponent
-              onPress={handleSignIn}
-              title="Je me connecte !"
-              disabled={isSigningIn}
-              // secondary={false}
-              // white={false}
+          <ButtonComponent
+            onPress={handleSignIn}
+            title="Je me connecte !"
+            disabled={isSigningIn}
+            // secondary={false}
+            // white={false}
+          />
+          <View className="mt-2 mb-4">
+            <Button
+              color={"#80AFFF"}
+              title="Mot de passe oublié ?"
+              onPress={() => navigation.navigate("ForgotPassword")}
             />
           </View>
-          <Button
-            color={"#80AFFF"}
-            title="Mot de passe oublié ?"
-            onPress={() => navigation.navigate("ForgotPassword")}
-          />
         </View>
-        <Text className="text-center text-app-blue-300 text-base mt-3">Ou</Text>
-        <View className="mt-4">
+
+        <ExternalConnexionButtons />
+        <Text className="text-center text-app-blue-300 text-base ">Ou</Text>
+        <View>
           <ButtonComponent
             onPress={() => navigation.navigate("SignUp")}
             secondary={true}
             title="Créer mon compte !"
           />
         </View>
-        <View className="">
-          <TouchableOpacity
-            onPress={() => {
-              dispatch(logAsGuest());
-            }}
-          >
-            <Text className="text-xl text-center text-app-blue-200 underline mt-4">
-              Continuer sans compte
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            dispatch(logAsGuest());
+          }}
+        >
+          <Text className="text-xl text-center text-app-blue-200 underline mt-4">
+            Continuer sans compte
+          </Text>
+        </TouchableOpacity>
         {/* <View className=" mt-4">
           <ButtonComponent
             onPress={handleResetOnboarding}
