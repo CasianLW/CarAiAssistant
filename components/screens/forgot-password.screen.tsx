@@ -15,6 +15,9 @@ import { useNavigation } from "@react-navigation/native";
 import ButtonComponent from "../general/button-component";
 import useForgotPassword from "@/hooks/use-forgot-password.hook";
 import globalStyles from "@/styles/global.styles";
+import InputComponent from "../general/input-component";
+import MailIcon from "@/assets/images/icons/mail.icon";
+import LockIcon from "@/assets/images/icons/lock.icon";
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
 const ForgotPasswordScreen: FC = () => {
@@ -33,15 +36,22 @@ const ForgotPasswordScreen: FC = () => {
   const navigation = useNavigation<SignInNavigationProp>();
 
   return (
-    <View style={styles.container}>
-      <View className="bg-app-black-300 w-full -z-20 ">
-        <Text>Test</Text>
-        {/* <Image
-          source={require("@/assets/images/app-ressources/forgot-pwd-img.webp")}
-          className="bg-cover  w-full mt-36"
-        /> */}
+    <View style={globalStyles.screenRegistrationContainer}>
+      <View>
+        <Text
+          style={globalStyles.title}
+          className="text-app-black-300 mb-6 text-center"
+        >
+          Mot de passe oublié ?
+        </Text>
+        <Text
+          className="text-app-black-300 mb-6 mt-2 text-center"
+          style={globalStyles.subtitle}
+        >
+          Entrez votre adresse email pour réinitialiser votre mot de passe
+        </Text>
       </View>
-      <View className="z-10 absolute bg-app-white-100 w-11/12 p-4 rounded-3xl top-[180px]">
+      <View>
         <Modal
           animationType="slide"
           transparent={true}
@@ -52,16 +62,22 @@ const ForgotPasswordScreen: FC = () => {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text>Reset Password</Text>
-              <TextInput
+              <Text style={globalStyles.title}>Reset Password</Text>
+              {/* <TextInput
                 style={globalStyles.lightInput}
                 className="w-[240px]"
                 placeholder="Confirmation Code"
                 placeholderTextColor="#888"
                 value={code}
                 onChangeText={setCode}
+              /> */}
+              <InputComponent
+                onChangeText={setCode}
+                placeholder="Confirmation Code"
+                value={code}
+                icon={<MailIcon fill="#808080" />}
               />
-              <TextInput
+              {/* <TextInput
                 style={globalStyles.lightInput}
                 className="w-[240px]"
                 placeholder="New Password"
@@ -69,19 +85,22 @@ const ForgotPasswordScreen: FC = () => {
                 secureTextEntry
                 value={newPassword}
                 onChangeText={setNewPassword}
+              /> */}
+              <InputComponent
+                onChangeText={setNewPassword}
+                placeholder="Nouveau mot de passe"
+                value={newPassword}
+                secure={true}
+                icon={<LockIcon fill={"#808080"} />}
               />
               {/* <Button
                 title="Confirm Reset"
                 onPress={handlePasswordResetConfirm}
               /> */}
-              <View className="w-1/2 m-auto mb-2">
-                <ButtonComponent
-                  onPress={handlePasswordResetConfirm}
-                  title="Confirm Reset"
-                  secondary={false}
-                  white={false}
-                />
-              </View>
+              <ButtonComponent
+                onPress={handlePasswordResetConfirm}
+                title="Confirm Reset"
+              />
 
               <Button
                 title="Cancel"
@@ -91,28 +110,39 @@ const ForgotPasswordScreen: FC = () => {
             </View>
           </View>
         </Modal>
-        <Text className="text-center text-2xl mb-4">Forgot Password</Text>
-        <TextInput
+
+        {/* <TextInput
           className="placeholder-gray-500"
           placeholderTextColor="#888"
           style={globalStyles.lightInput}
           placeholder="Username"
           onChangeText={(text) => setUsername(text)}
           value={username}
+        /> */}
+        <InputComponent
+          onChangeText={(text) => setUsername(text)}
+          placeholder="monemail@mail.com"
+          value={username}
+          icon={<MailIcon fill="#808080" />}
         />
         {/* <Button title="Submit" onPress={handleForgotPassword} /> */}
-        <View className="w-1/2 m-auto mb-5">
+        <View>
           <ButtonComponent
             onPress={handleForgotPassword}
-            title="Submit"
-            secondary={false}
-            white={false}
+            title="Recevoir le code"
           />
         </View>
-        <Button
-          title="Already have an account? Sign In"
-          color={"#03050C"}
+        <Text className="text-center text-app-blue-300 text-base ">Ou</Text>
+
+        <ButtonComponent
+          onPress={() => navigation.navigate("SignUp")}
+          title="Je crée mon compte !"
+          secondary={true}
+        />
+        <ButtonComponent
           onPress={() => navigation.navigate("SignIn")}
+          title="Je me connecte !"
+          secondary={true}
         />
       </View>
     </View>
