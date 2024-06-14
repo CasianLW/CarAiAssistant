@@ -1,5 +1,6 @@
 import React, { FC, FunctionComponent, ReactElement } from "react";
 import { TextInput, View, StyleSheet, ViewStyle, Image } from "react-native";
+import { ScreenContainer } from "react-native-screens";
 import { SvgProps } from "react-native-svg";
 
 interface InputComponentProps {
@@ -36,6 +37,7 @@ const InputComponent: FC<InputComponentProps> = ({
       {icon ? icon : ""}
       <TextInput
         placeholder={placeholder}
+        placeholderTextColor={"#808080"}
         value={value}
         secureTextEntry={secure}
         onChangeText={onChangeText}
@@ -48,20 +50,23 @@ const InputComponent: FC<InputComponentProps> = ({
 
 const styles = StyleSheet.create({
   container: {
+    minHeight: 56,
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 25,
-    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 12,
+    gap: 12,
+    // borderWidth: 1,
+    // borderColor: "#ccc",
+    borderRadius: 16,
+    backgroundColor: "#EBF2FF",
     marginVertical: 10,
   },
+
   defaultInput: {
     flex: 1,
     height: 50,
     fontSize: 18,
-    color: "#808080",
+    color: "#337AFF",
   },
   whiteInput: {
     flex: 1,
