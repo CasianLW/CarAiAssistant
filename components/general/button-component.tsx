@@ -1,3 +1,83 @@
+import React, { FC } from "react";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
+
+interface ButtonComponentProps {
+  title: string;
+  onPress: () => void;
+  secondary?: boolean;
+  disabled?: boolean;
+  white?: boolean;
+  style?: ViewStyle;
+}
+
+const ButtonComponent: FC<ButtonComponentProps> = ({
+  title,
+  onPress,
+  secondary = false,
+  disabled = false,
+  style = {},
+}) => {
+  return (
+    <TouchableOpacity
+      style={[
+        styles.button,
+        style,
+        { borderWidth: disabled ? 0 : 1 },
+        disabled
+          ? {}
+          : secondary
+          ? styles.buttonSecondary
+          : styles.buttonPrimary,
+      ]}
+      onPress={onPress}
+      // disabled={disabled}
+    >
+      <Text
+        style={[
+          styles.buttonText,
+          { color: disabled ? "#808080" : secondary ? "#337AFF" : "#FFFFFF" },
+        ]}
+      >
+        {title}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: 32,
+    // paddingVertical: 15,
+    // paddingHorizontal: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+    maxWidth: "100%",
+    fontFamily: "UrbanistMedium500",
+    height: 52,
+    // flex: 1,
+  },
+  buttonText: {
+    fontSize: 20,
+    fontFamily: "UrbanistSemiBold600",
+  },
+  buttonPrimary: {
+    backgroundColor: "#337AFF",
+    borderColor: "#FFFFFF",
+  },
+  buttonSecondary: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#337AFF",
+  },
+});
+
+export default ButtonComponent;
 // import { LinearGradient } from "expo-linear-gradient";
 // import React, { FC } from "react";
 // import {
@@ -84,84 +164,3 @@
 // };
 
 // export default ButtonComponent;
-
-import React, { FC } from "react";
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from "react-native";
-
-interface ButtonComponentProps {
-  title: string;
-  onPress: () => void;
-  secondary?: boolean;
-  disabled?: boolean;
-  white?: boolean;
-  style?: ViewStyle;
-}
-
-const ButtonComponent: FC<ButtonComponentProps> = ({
-  title,
-  onPress,
-  secondary = false,
-  disabled = false,
-  white = false,
-  style = {},
-}) => {
-  const getButtonColors = () => {
-    if (disabled) {
-      return ["#e0e0e0", "#e0e0e0"];
-    } else if (secondary) {
-      return ["#ffffff", "#ffffff"];
-    } else if (white) {
-      return ["#FFFFFF", "#FFFFFF"];
-    } else {
-      return ["#0066FF", "#0066FF"];
-    }
-  };
-
-  const getTextColor = () => {
-    if (disabled || secondary) {
-      return "#666666";
-    } else if (white) {
-      return "#0066FF";
-    } else {
-      return "#FFFFFF";
-    }
-  };
-
-  return (
-    <TouchableOpacity
-      style={[styles.button, { backgroundColor: getButtonColors()[0] }, style]}
-      onPress={onPress}
-      disabled={disabled}
-    >
-      <Text style={[styles.buttonText, { color: getTextColor() }]}>
-        {title}
-      </Text>
-    </TouchableOpacity>
-  );
-};
-
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: 25,
-    paddingVertical: 15,
-    paddingHorizontal: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 10,
-    maxWidth: "100%",
-    fontFamily: "UrbanistMedium500",
-    // flex: 1,
-  },
-  buttonText: {
-    fontSize: 20,
-    fontFamily: "UrbanistSemiBold600",
-  },
-});
-
-export default ButtonComponent;
