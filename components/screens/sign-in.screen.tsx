@@ -1,6 +1,13 @@
 // src/components/screens/SignInScreen.tsx
 import React, { FC, useEffect, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "@/app/_layout";
@@ -10,6 +17,8 @@ import useSignIn from "@/hooks/use-sign-in.hook";
 import { logAsGuest } from "@/stores/slices/auth-slice";
 import { useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import InputComponent from "../general/input-component";
+import MailIcon from "@/assets/images/icons/mail.icon";
 
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
@@ -43,32 +52,44 @@ const SignInScreen: FC = () => {
   }, []);
 
   return (
-    <View className="bg-app-black-200" style={styles.container}>
-      <View className="bg-app-white-100 w-full">
+    <View className="" style={globalStyles.screenRegistrationContainer}>
+      <View className="bg-app-white-100 w-full ">
         {/* <Image
           source={require('@/assets/images/app-ressources/login-image.webp')}
           className="bg-cover w-full mt-44"
         /> */}
       </View>
-      <View className="absolute z-10 w-11/12 top-[180px]">
-        <View className="bg-app-white-100 mt-auto rounded-3xl p-4">
+      <View className="">
+        <View>
           <Text
             className="text-app-black-300 mb-6 mt-2 text-center"
             style={globalStyles.title}
           >
-            Sign In
+            Connexion
           </Text>
-          <Text>Current Onboarding State: {hasOnboardedValue}</Text>
+          <Text
+            className="text-app-black-300 mb-6 mt-2 text-center"
+            style={globalStyles.subtitle}
+          >
+            Profitez de plus de fonctionnalités gratuites en vous connectant
+          </Text>
+          {/* <Text>Current Onboarding State: {hasOnboardedValue}</Text> */}
 
-          <TextInput
+          {/* <TextInput
             className="mx-auto"
             style={globalStyles.lightInput}
             placeholder="Username"
             placeholderTextColor="#888"
             onChangeText={(text) => setUsername(text)}
             value={username}
+          /> */}
+          <InputComponent
+            onChangeText={(text) => setUsername(text)}
+            placeholder="youremail@mail.com"
+            value={username}
+            icon={<MailIcon fill="#808080" />}
           />
-          <TextInput
+          {/* <TextInput
             className="mx-auto"
             style={globalStyles.lightInput}
             placeholder="Password"
@@ -76,48 +97,56 @@ const SignInScreen: FC = () => {
             onChangeText={(text) => setPassword(text)}
             value={password}
             secureTextEntry
+          /> */}
+          <InputComponent
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            placeholder="*********"
+            secure={true}
+            icon={<MailIcon fill={"#808080"} />}
           />
-          <View className="w-1/2 m-auto mb-5">
+          <View className="w-full m-auto">
             <ButtonComponent
               onPress={handleSignIn}
-              title="Log in"
+              title="Je me connecte !"
               disabled={isSigningIn}
-              secondary={false}
-              white={false}
+              // secondary={false}
+              // white={false}
             />
           </View>
           <Button
-            color={"#03050C"}
-            title="Forgot Password?"
+            color={"#80AFFF"}
+            title="Mot de passe oublié ?"
             onPress={() => navigation.navigate("ForgotPassword")}
           />
         </View>
-        <View className="mb-44 mt-4">
+        <Text className="text-center text-app-blue-300 text-base mt-3">Ou</Text>
+        <View className="mt-4">
           <ButtonComponent
             onPress={() => navigation.navigate("SignUp")}
             secondary={true}
-            white={false}
-            title="Don't have an account? Sign Up"
+            title="Créer mon compte !"
           />
         </View>
-        <View className="mb-44 mt-4">
-          <ButtonComponent
+        <View className="">
+          <TouchableOpacity
             onPress={() => {
               dispatch(logAsGuest());
             }}
-            secondary={true}
-            white={false}
-            title="Continuer sans compte"
-          />
+          >
+            <Text className="text-xl text-center text-app-blue-200 underline mt-4">
+              Continuer sans compte
+            </Text>
+          </TouchableOpacity>
         </View>
-        <View className="mb-44 mt-4">
+        {/* <View className=" mt-4">
           <ButtonComponent
             onPress={handleResetOnboarding}
             secondary={true}
             white={false}
             title="False onboarding local storage"
           />
-        </View>
+        </View> */}
       </View>
     </View>
   );
