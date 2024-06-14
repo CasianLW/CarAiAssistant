@@ -45,6 +45,7 @@ const useSignUp = () => {
   return {
     username,
     setUsername,
+    email,
     setEmail,
     password,
     setPassword,
