@@ -2,6 +2,16 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
+  screenRegistrationContainer: {
+    marginTop: 80,
+    marginHorizontal: 24,
+    backgroundColor: "#FFFFFF",
+  },
+  screenAppContainer: {
+    marginHorizontal: 24,
+    backgroundColor: "#FFFFFF",
+  },
+
   primaryButton: {
     flex: 1,
     justifyContent: "center",
@@ -42,7 +52,7 @@ export default StyleSheet.create({
     zIndex: 10,
   },
   title: {
-    fontFamily: "UrbanistSemiBold600",
+    fontFamily: "UrbanistBold700",
     fontSize: 24,
     fontWeight: "900",
     color: "#000",
