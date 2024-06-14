@@ -1,0 +1,83 @@
+import React, { FC, FunctionComponent, ReactElement } from "react";
+import { TextInput, View, StyleSheet, ViewStyle, Image } from "react-native";
+import { SvgProps } from "react-native-svg";
+
+interface InputComponentProps {
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  disabled?: boolean;
+  white?: boolean;
+  icon?: ReactElement; // We are using react-native-svg
+  style?: ViewStyle;
+  secure?: boolean;
+}
+
+const InputComponent: FC<InputComponentProps> = ({
+  placeholder,
+  value,
+  onChangeText,
+  disabled = false,
+  white = false,
+  icon = null,
+  style = {},
+  secure = false,
+}) => {
+  const inputStyle = () => {
+    if (white) {
+      return styles.whiteInput;
+    } else {
+      return styles.defaultInput;
+    }
+  };
+
+  return (
+    <View style={[styles.container, style]}>
+      {icon ? icon : ""}
+      <TextInput
+        placeholder={placeholder}
+        value={value}
+        secureTextEntry={secure}
+        onChangeText={onChangeText}
+        style={[inputStyle(), disabled ? styles.disabledInput : null]}
+        editable={!disabled}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 25,
+    backgroundColor: "#FFFFFF",
+    marginVertical: 10,
+  },
+  defaultInput: {
+    flex: 1,
+    height: 50,
+    fontSize: 18,
+    color: "#808080",
+  },
+  whiteInput: {
+    flex: 1,
+    height: 50,
+    fontSize: 18,
+    color: "#808080",
+    backgroundColor: "#FFF",
+  },
+  disabledInput: {
+    backgroundColor: "#e0e0e0",
+  },
+  iconStyle: {
+    width: 24,
+    height: 24,
+    marginRight: 10,
+  },
+});
+
+export default InputComponent;
