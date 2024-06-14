@@ -93,7 +93,7 @@ const OnboardingScreen: FC = () => {
           {slide < 2 && (
             <ButtonComponent
               style={styles.buttonFlex}
-              secondary={true}
+              disabled={true}
               title="Passer"
               onPress={() => navigation.replace("SignIn")}
             />
