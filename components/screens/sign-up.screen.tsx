@@ -32,6 +32,7 @@ const SignUpScreen: FC = () => {
   const {
     username,
     setUsername,
+    email,
     setEmail,
     password,
     setPassword,
@@ -63,16 +64,26 @@ const SignUpScreen: FC = () => {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Text>Enter Confirmation Code</Text>
-              <TextInput
+              <Text style={globalStyles.title}>Enter Confirmation Code</Text>
+              {/* <TextInput
                 style={globalStyles.lightInput}
                 placeholder="Confirmation Code"
                 placeholderTextColor="#888"
                 value={confirmationCode}
                 onChangeText={setConfirmationCode}
+              /> */}
+              <InputComponent
+                onChangeText={setConfirmationCode}
+                placeholder="Confirmation Code"
+                value={confirmationCode}
+                icon={<MailIcon fill="#808080" />}
               />
-              <Button title="Confirm" onPress={handleConfirmSignUp} />
-              <Text>*check your email</Text>
+              {/* <Button title="Confirm" onPress={handleConfirmSignUp} /> */}
+              <ButtonComponent
+                onPress={handleConfirmSignUp}
+                title="Confirmer"
+              />
+              <Text>*vérifie tes mails</Text>
             </View>
           </View>
         </Modal>
@@ -103,8 +114,8 @@ const SignUpScreen: FC = () => {
         />
         <InputComponent
           onChangeText={(text) => setEmail(text)}
-          placeholder="monemain@mail.com"
-          value={username}
+          placeholder="monemail@mail.com"
+          value={email}
           icon={<MailIcon fill="#808080" />}
         />
         {/* <TextInput
@@ -127,7 +138,6 @@ const SignUpScreen: FC = () => {
           onPress={handleSignUp}
           title="Je crée mon compte !"
           secondary={false}
-          white={false}
         />
         <View className="mt-2 mb-4">
           <Button
