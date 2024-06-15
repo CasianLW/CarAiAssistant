@@ -30,6 +30,7 @@ module.exports = {
           300: "#80AFFF",
           400: "#BAD3F",
           500: "#EBF2FF",
+          1337: "#1E90FF",
         },
         "app-gris": {
           200: "#808080",
