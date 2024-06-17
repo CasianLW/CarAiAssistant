@@ -1,94 +1,189 @@
-import React, { FC, useState } from "react";
-import { View, Text, StyleSheet, Button, TextInput } from "react-native";
-import { Auth } from "aws-amplify";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { AuthStackParamList } from "@/app/_layout";
-import { useAuth } from "@/context/auth-context";
-import { useSelector } from "react-redux";
+import React, { FC } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Button,
+  ImageSourcePropType,
+} from "react-native";
+import ButtonComponent from "../general/button-component";
+import SearchIcon from "@/assets/images/icons/search.icon";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/stores/main-store";
-import { useDispatch } from "react-redux";
+import { Auth } from "aws-amplify";
 import { clearUser } from "@/stores/slices/auth-slice";
-import { useQuery } from "@tanstack/react-query";
-import { fetchVehicles } from "@/helpers/vehicle-query-list";
-import { VehicleRecord } from "@/interfaces/vehicle-interface";
-import SelectMake from "../vehicle/make-select-component";
+import globalStyles from "@/styles/global.styles";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
+import { SharedTabParamList } from "./sharedScreens";
 
-type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
-type HomeScreenProps = {
-  setIsAuthenticated: (value: boolean) => void;
-};
 const HomeScreen: FC = () => {
-  // const [make, setMake] = useState("");
-  // const { data, error, isLoading } = useQuery({
-  //   queryKey: ["vehicles", make],
-  //   queryFn: () => fetchVehicles(make),
-  //   enabled: !!make, // This will ensure the query only runs when 'make' is not empty
-  // });
-
-  // const { user, signOut } = useAuth(); // Use the useAuth hook to access user and signOut function
   const user = useSelector((state: RootState) => state.auth.userData);
   const dispatch = useDispatch();
+  const navigation = useNavigation<StackNavigationProp<SharedTabParamList>>();
 
-  const logUser = (userPassed: any) => {
-    console.log(userPassed);
-  };
-  const signOutAppp = async () => {
+  const signOut = async () => {
     try {
-      // await signOut();
-      await Auth.signOut(); // Sign out of the Auth module
-      // Reset the navigation state to the Auth stack
+      await Auth.signOut();
       dispatch(clearUser());
     } catch (error) {
-      console.error("Error signing out: ", error); // Handle sign-out errors heres
+      console.error("Error signing out: ", error);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Welcome to the Home Screen</Text>
-      <Text style={styles.text}>
-        You are now signed in! {user?.email ?? ""}
-        {/* {user?.signInUserSession?.idToken?.payload?.email ?? ""} */}
-      </Text>
-      {/* <Button title="LOG USER" onPress={() => logUser(user)} /> */}
-      <Button title="Sign Out" onPress={signOutAppp} />
-      {/* <View> */}
-      {/* <TextInput
-        style={styles.input}
-        placeholder="Enter car make"
-        placeholderTextColor={"gray"}
-        onChangeText={setMake}
+    <ScrollView style={styles.container}>
+      <Image
+        source={require("@/assets/images/onboarding/decapotable.png")}
+        style={styles.heroImage}
       />
-      {data?.records.map((vehicle: VehicleRecord) => (
-        <Text key={vehicle.recordid}>
-          {vehicle.fields.make} - {vehicle.fields.model} ({vehicle.fields.year})
+      <Text style={styles.heroText}>
+        Allons-y, trouvons la voiture à votre pied!
+      </Text>
+      <View className="w-[75%] mx-auto">
+        <ButtonComponent
+          title="Recherche rapide"
+          onPress={() => console.log("Find a car")}
+          icon={<SearchIcon stroke={"#337AFF"} strokeWidth={2} />}
+          secondary
+        />
+      </View>
+      <View style={styles.categoriesContainer}>
+        <Text style={globalStyles.title}>Recherche par:</Text>
+
+        <ScrollView
+          horizontal
+          className=""
+          showsHorizontalScrollIndicator={false}
+        >
+          <CategoryButton
+            onPress={() => navigation.navigate("SearchUnknown")}
+            title="Aucune idée"
+            description="Pour les personnes qui veulent découvrir"
+            image={require("@/assets/images/app-ressources/homepage/unknown-search.png")}
+          />
+          <CategoryButton
+            onPress={() => navigation.navigate("SearchUnknown")}
+            title="Voiture"
+            description="Déjà un modèle particulier en tête?"
+            image={require("@/assets/images/app-ressources/homepage/car-search.png")}
+          />
+          <CategoryButton
+            onPress={() => navigation.navigate("SearchUnknown")}
+            title="Catégorie"
+            description="Pour les personnes ayant un type en tête"
+            image={require("@/assets/images/app-ressources/homepage/category-search.png")}
+          />
+        </ScrollView>
+        <Text style={globalStyles.title}>Pour profiter pleinement:</Text>
+        <ButtonComponent onPress={signOut} title="Je crée mon compte !" />
+        <Text className="text-center text-app-blue-300 text-base my-2 ">
+          Fonctionnalités gratuites grâce a :
         </Text>
-      ))} */}
-      {/* </View> */}
-      <SelectMake />
-      {/* Add your home screen content here */}
-    </View>
+        <View className="h-[120px] relative overflow-hidden rounded-3xl">
+          <Text
+            className="absolute z-10 text-white mt-2 ml-4 text-xl"
+            style={{ fontFamily: "UrbanistSemiBold600" }}
+          >
+            Michelin: le top du pneu
+          </Text>
+
+          <Image
+            source={require("@/assets/images/app-ressources/login-image.webp")}
+            className="bg-contain h-36"
+          />
+        </View>
+      </View>
+      <View style={styles.bottomContainer}>
+        <Text className="text-center" style={styles.signInText}>
+          You are now signed in! {user?.email ?? ""}
+        </Text>
+        <Button
+          title="Sign Out"
+          onPress={signOut}
+          // style={styles.signOutButton}
+        />
+      </View>
+    </ScrollView>
   );
 };
+
+const CategoryButton: FC<{
+  title: string;
+  description: string;
+  image: ImageSourcePropType;
+  onPress: () => void;
+}> = ({ title, description, image, onPress }) => (
+  <TouchableOpacity onPress={onPress}>
+    <View className="flex content-between justify-between rounded-2xl bg-app-blue-200 mt-1 ml-1 mr-2 p-2 h-[120px] w-[140px] overflow-hidden">
+      <Text
+        style={[{ fontFamily: "UrbanistSemiBold600" }]}
+        className="text-xl text-app-white-100"
+      >
+        {title}
+      </Text>
+      <Image className="absolute -right-4 -z-10 top-6" source={image} />
+      <Text className="text-xs text-app-white-100 ">{description}</Text>
+    </View>
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    marginTop: 50,
+    backgroundColor: "#1D68E3",
   },
-  text: {
-    fontSize: 20,
+  heroImage: {
+    width: "100%",
+    height: 300,
+    resizeMode: "cover",
+  },
+  heroText: {
+    fontSize: 24,
     fontWeight: "bold",
+    color: "#FFFFFF",
+    textAlign: "center",
+    marginTop: 20,
   },
-  input: {
-    height: 40,
-    width: "70%",
-    marginHorizontal: "auto",
-    margin: 12,
-    borderWidth: 1,
+
+  categoriesContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    padding: 24,
+    // marginHorizontal: 20,
+  },
+  categoryButton: {
+    backgroundColor: "#337AFF",
+    padding: 15,
+    borderRadius: 32,
+    marginTop: 4,
+    marginLeft: 4,
+  },
+
+  categoryDescription: {
+    fontSize: 14,
+    color: "#666",
+  },
+  bottomContainer: {
+    padding: 20,
+  },
+  welcomeText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+  },
+  signInText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    marginBottom: 10,
+  },
+  signOutButton: {
+    backgroundColor: "#FF6347", // Adjust the sign out button color
+    borderRadius: 10,
     padding: 10,
   },
 });
