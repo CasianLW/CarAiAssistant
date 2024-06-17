@@ -38,19 +38,23 @@ const HomeScreen: FC = () => {
   return (
     <ScrollView style={styles.container}>
       <Image
+        className="ml-24 mt-4"
         source={require("@/assets/images/onboarding/decapotable.png")}
         style={styles.heroImage}
       />
-      <Text style={styles.heroText}>
-        Allons-y, trouvons la voiture à votre pied!
-      </Text>
-      <View className="w-[75%] mx-auto">
-        <ButtonComponent
-          title="Recherche rapide"
-          onPress={() => console.log("Find a car")}
-          icon={<SearchIcon stroke={"#337AFF"} strokeWidth={2} />}
-          secondary
-        />
+      <View className="absolute mt-5 w-full ">
+        <Text className="mb-16 text-left" style={styles.heroText}>
+          Allons-y, trouvons la voiture à votre pied!
+        </Text>
+        <View className="w-[75%] mx-auto">
+          <ButtonComponent
+            style={{ width: "80%", margin: "auto" }}
+            title="Recherche rapide"
+            onPress={() => navigation.navigate("SearchUnknown")}
+            icon={<SearchIcon stroke={"#337AFF"} strokeWidth={2} />}
+            secondary
+          />
+        </View>
       </View>
       <View style={styles.categoriesContainer}>
         <Text style={globalStyles.title}>Recherche par:</Text>
@@ -146,8 +150,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: "#FFFFFF",
-    textAlign: "center",
-    marginTop: 20,
+    // textAlign: "center",
+    paddingLeft: 24,
+    // marginTop: 20,
   },
 
   categoriesContainer: {
