@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactElement } from "react";
 import {
   TouchableOpacity,
   Text,
@@ -14,6 +14,7 @@ interface ButtonComponentProps {
   disabled?: boolean;
   white?: boolean;
   style?: ViewStyle;
+  icon?: ReactElement;
 }
 
 const ButtonComponent: FC<ButtonComponentProps> = ({
@@ -22,6 +23,7 @@ const ButtonComponent: FC<ButtonComponentProps> = ({
   secondary = false,
   disabled = false,
   style = {},
+  icon,
 }) => {
   return (
     <TouchableOpacity
@@ -29,6 +31,7 @@ const ButtonComponent: FC<ButtonComponentProps> = ({
         styles.button,
         style,
         { borderWidth: disabled ? 0 : 1 },
+        icon ? { flexDirection: "row", gap: 8 } : {},
         disabled
           ? {}
           : secondary
@@ -38,6 +41,7 @@ const ButtonComponent: FC<ButtonComponentProps> = ({
       onPress={onPress}
       // disabled={disabled}
     >
+      {icon ? icon : ""}
       <Text
         style={[
           styles.buttonText,
