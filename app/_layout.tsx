@@ -22,6 +22,10 @@ import ProfileScreen from "@/components/tabs/profile-screen.tab";
 import "react-native-reanimated";
 import { clearUser, setUser } from "@/stores/slices/auth-slice";
 import OnboardingScreen from "@/components/screens/onboarding.screen";
+import SearchUnknownScreen from "@/components/screens/categories/unknown.search";
+import SearchCarScreen from "@/components/screens/categories/car.search";
+import SearchCategoryScreen from "@/components/screens/categories/category.search";
+import { sharedScreens } from "@/components/tabs/sharedScreens";
 
 Amplify.configure(config);
 
@@ -35,10 +39,13 @@ export type AuthStackParamList = {
   Onboarding: undefined;
 };
 
-type MainTabParamList = {
+export type MainTabParamList = {
   Home: undefined;
   Profile: undefined;
   Login: undefined;
+  // SearchUnknown: undefined;
+  // SearchCar: undefined;
+  // SearchCategory: undefined;
 };
 
 const AuthNavigator: FC<{ hasOnboarded: boolean }> = ({ hasOnboarded }) => (
@@ -57,6 +64,10 @@ const MainAppNavigator: FC = () => (
   <MainTab.Navigator>
     <MainTab.Screen name="Home" component={HomeScreen} />
     <MainTab.Screen name="Profile" component={ProfileScreen} />
+    {/* <MainTab.Screen name="SearchUnknown" component={SearchUnknownScreen} />
+    <MainTab.Screen name="SearchCar" component={SearchCarScreen} />
+    <MainTab.Screen name="SearchCategory" component={SearchCategoryScreen} /> */}
+    {sharedScreens}
   </MainTab.Navigator>
 );
 
@@ -68,8 +79,39 @@ const GuestAppNavigator: FC = () => {
   };
 
   return (
-    <MainTab.Navigator>
-      <MainTab.Screen name="Home" component={HomeScreen} />
+    <MainTab.Navigator
+    // styles for the bottom tab bar (menu)
+    // screenOptions={{
+    //   tabBarStyle: {
+    //     backgroundColor: "#337AFF", // Adjust the background color as needed
+    //     borderTopWidth: 0, // Remove the top border
+    //     elevation: 0, // Remove shadow on Android
+    //     shadowOpacity: 0, // Remove shadow on iOS
+    //     borderWidth: 0,
+    //     shadowRadius: 0,
+    //     shadowOffset: {
+    //       width: 0,
+    //       height: 0,
+    //     },
+    //   },
+    //   tabBarActiveTintColor: "#FFFFFF",
+    //   tabBarInactiveTintColor: "#BBBBBB",
+    // }}
+    >
+      <MainTab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerTitle: "",
+          headerStyle: {
+            backgroundColor: "#1D68E3",
+            borderWidth: 0,
+            shadowRadius: 0,
+            shadowOpacity: 0,
+            elevation: 0,
+          },
+        }}
+      />
       <MainTab.Screen
         name="Login"
         component={SignInScreen}
@@ -80,6 +122,12 @@ const GuestAppNavigator: FC = () => {
           },
         })}
       />
+
+      {/* <MainTab.Screen name="SearchUnknown" component={SearchUnknownScreen} />
+      <MainTab.Screen name="SearchCar" component={SearchCarScreen} />
+      <MainTab.Screen name="SearchCategory" component={SearchCategoryScreen} /> */}
+
+      {sharedScreens}
     </MainTab.Navigator>
   );
 };
