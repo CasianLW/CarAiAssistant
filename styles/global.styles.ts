@@ -78,4 +78,13 @@ export default StyleSheet.create({
     padding: 15, // Adjust the padding as needed
     alignItems: "center",
   },
+
+  // Search global styles
+
+  searchContainer: {
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 24,
+  },
 });
