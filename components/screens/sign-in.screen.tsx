@@ -118,13 +118,11 @@ const SignInScreen: FC = () => {
 
         <ExternalConnexionButtons />
         <Text className="text-center text-app-blue-300 text-base ">Ou</Text>
-        <View>
-          <ButtonComponent
-            onPress={() => navigation.navigate("SignUp")}
-            secondary={true}
-            title="Créer mon compte !"
-          />
-        </View>
+        <ButtonComponent
+          onPress={() => navigation.navigate("SignUp")}
+          secondary={true}
+          title="Créer mon compte !"
+        />
         <TouchableOpacity
           onPress={() => {
             dispatch(logAsGuest());
