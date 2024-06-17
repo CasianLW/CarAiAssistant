@@ -19,18 +19,18 @@ export const sharedScreens = [
     key="SearchUnknown"
     name="SearchUnknown"
     component={SearchUnknownScreen}
-    options={{ tabBarButton: () => null }}
+    options={{ tabBarButton: () => null, headerShown: false }}
   />,
   <Screen
     key="SearchCar"
     name="SearchCar"
     component={SearchCarScreen}
-    options={{ tabBarButton: () => null }}
+    options={{ tabBarButton: () => null, headerShown: false }}
   />,
   <Screen
     key="SearchCategory"
     name="SearchCategory"
     component={SearchCategoryScreen}
-    options={{ tabBarButton: () => null }}
+    options={{ tabBarButton: () => null, headerShown: false }}
   />,
 ];
