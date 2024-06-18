@@ -12,6 +12,7 @@ interface InputComponentProps {
   icon?: ReactElement; // We are using react-native-svg
   style?: ViewStyle;
   secure?: boolean;
+  number?: boolean;
 }
 
 const InputComponent: FC<InputComponentProps> = ({
@@ -23,6 +24,7 @@ const InputComponent: FC<InputComponentProps> = ({
   icon = null,
   style = {},
   secure = false,
+  number = false,
 }) => {
   const inputStyle = () => {
     if (white) {
@@ -36,6 +38,7 @@ const InputComponent: FC<InputComponentProps> = ({
     <View style={[styles.container, style]}>
       {icon ? icon : ""}
       <TextInput
+        keyboardType={number ? "numeric" : "default"}
         placeholder={placeholder}
         placeholderTextColor={"#808080"}
         value={value}
