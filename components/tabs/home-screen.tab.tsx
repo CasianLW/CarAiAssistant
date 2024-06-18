@@ -38,11 +38,11 @@ const HomeScreen: FC = () => {
   return (
     <ScrollView style={styles.container}>
       <Image
-        className="ml-24 mt-4"
+        className="ml-24 mt-24"
         source={require("@/assets/images/onboarding/decapotable.png")}
         style={styles.heroImage}
       />
-      <View className="absolute mt-5 w-full ">
+      <View className="absolute mt-28 w-full ">
         <Text className="mb-16 text-left" style={styles.heroText}>
           Allons-y, trouvons la voiture à votre pied!
         </Text>
@@ -71,13 +71,13 @@ const HomeScreen: FC = () => {
             image={require("@/assets/images/app-ressources/homepage/unknown-search.png")}
           />
           <CategoryButton
-            onPress={() => navigation.navigate("SearchUnknown")}
+            onPress={() => navigation.navigate("SearchCar")}
             title="Voiture"
             description="Déjà un modèle particulier en tête?"
             image={require("@/assets/images/app-ressources/homepage/car-search.png")}
           />
           <CategoryButton
-            onPress={() => navigation.navigate("SearchUnknown")}
+            onPress={() => navigation.navigate("SearchCategory")}
             title="Catégorie"
             description="Pour les personnes ayant un type en tête"
             image={require("@/assets/images/app-ressources/homepage/category-search.png")}
@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 24,
+    // marginTop: 50,
     // marginHorizontal: 20,
   },
   categoryButton: {
