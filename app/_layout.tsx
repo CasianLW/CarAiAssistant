@@ -102,6 +102,8 @@ const GuestAppNavigator: FC = () => {
         name="Home"
         component={HomeScreen}
         options={{
+          //added false so the rest of styles not applied
+          headerShown: false,
           headerTitle: "",
           headerStyle: {
             backgroundColor: "#1D68E3",
