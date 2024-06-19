@@ -12,6 +12,7 @@ interface ButtonComponentProps {
   onPress: () => void;
   secondary?: boolean;
   disabled?: boolean;
+  disabledAction?: boolean;
   white?: boolean;
   style?: ViewStyle;
   icon?: ReactElement;
@@ -22,6 +23,7 @@ const ButtonComponent: FC<ButtonComponentProps> = ({
   onPress,
   secondary = false,
   disabled = false,
+  disabledAction = false,
   style = {},
   icon,
 }) => {
@@ -32,14 +34,16 @@ const ButtonComponent: FC<ButtonComponentProps> = ({
         style,
         { borderWidth: disabled ? 0 : 1 },
         icon ? { flexDirection: "row", gap: 8 } : {},
-        disabled
+        disabledAction
+          ? { backgroundColor: "#BAD3FF", borderColor: "transparent" }
+          : disabled
           ? {}
           : secondary
           ? styles.buttonSecondary
           : styles.buttonPrimary,
       ]}
       onPress={onPress}
-      // disabled={disabled}
+      disabled={disabledAction}
     >
       {icon ? icon : ""}
       <Text
