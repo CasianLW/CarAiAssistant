@@ -3,7 +3,7 @@ import globalStyles from "@/styles/global.styles";
 import React, { FC, useState } from "react";
 import { View, TextInput, Text, StyleSheet } from "react-native";
 
-interface FilterData {
+export interface FilterData {
   minPrice: string;
   maxPrice: string;
   minYear: string;
