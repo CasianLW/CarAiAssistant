@@ -15,6 +15,8 @@ import AdvancementBar from "./advancement-bar.component";
 import FilterStep, { FilterData } from "./steps/filter.step";
 import MakeModelStep from "./steps/make-model.step";
 import ButtonComponent from "@/components/general/button-component";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { SharedTabParamList } from "@/components/tabs/sharedScreens";
 export interface CarData {
   makeId: string;
   makeTitle: string;
@@ -45,8 +47,8 @@ const SearchCarScreen: FC = () => {
     maxYear: "",
     minYear: "",
   });
-
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<SharedTabParamList>>();
 
   const steps = ["MakeModel", "Filter", "Chat"];
 
@@ -55,6 +57,7 @@ const SearchCarScreen: FC = () => {
       setCurrentStep(currentStep + 1);
     } else {
       console.log("Final data:", { carData, filterData, chatData });
+      navigation.navigate("SearchResults");
     }
   };
 
