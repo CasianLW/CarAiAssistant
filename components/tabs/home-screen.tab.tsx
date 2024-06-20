@@ -101,6 +101,12 @@ const HomeScreen: FC = () => {
             className="bg-contain h-36"
           />
         </View>
+        <ButtonComponent
+          onPress={() => navigation.navigate("SearchResults")}
+          secondary={true}
+          white={false}
+          title="Search Results"
+        />
       </View>
       <View style={styles.bottomContainer}>
         <Text className="text-center" style={styles.signInText}>
