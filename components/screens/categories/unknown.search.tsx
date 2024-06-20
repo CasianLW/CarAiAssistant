@@ -7,8 +7,12 @@ import ChatStep from "./steps/chat.step";
 import AdvancementBar from "./advancement-bar.component";
 import FilterStep, { FilterData } from "./steps/filter.step";
 import ButtonComponent from "@/components/general/button-component";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { SharedTabParamList } from "@/components/tabs/sharedScreens";
 
 const SearchUnknownScreen: FC = () => {
+  const navigation = useNavigation<StackNavigationProp<SharedTabParamList>>();
+
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [chatData, setChatData] = useState<string>("");
   const [filterData, setFilterData] = useState<FilterData>({
@@ -22,8 +26,6 @@ const SearchUnknownScreen: FC = () => {
     minYear: "",
   });
 
-  const navigation = useNavigation();
-
   const steps = ["Chat", "Filter"];
 
   const nextStep = () => {
@@ -31,6 +33,7 @@ const SearchUnknownScreen: FC = () => {
       setCurrentStep(currentStep + 1);
     } else {
       console.log("Final data:", { chatData, filterData });
+      navigation.navigate("SearchResults");
     }
   };
 

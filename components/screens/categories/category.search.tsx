@@ -8,6 +8,8 @@ import AdvancementBar from "./advancement-bar.component";
 import FilterStep, { FilterData } from "./steps/filter.step";
 import CategoryStep from "./steps/category.step";
 import ButtonComponent from "@/components/general/button-component";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { SharedTabParamList } from "@/components/tabs/sharedScreens";
 
 const SearchCategoryScreen: FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -24,7 +26,7 @@ const SearchCategoryScreen: FC = () => {
     minYear: "",
   });
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<SharedTabParamList>>();
 
   const steps = ["Category", "Filter", "Chat"];
 
@@ -33,6 +35,7 @@ const SearchCategoryScreen: FC = () => {
       setCurrentStep(currentStep + 1);
     } else {
       console.log("Final data:", { categoryData, filterData, chatData });
+      navigation.navigate("SearchResults");
     }
   };
 
