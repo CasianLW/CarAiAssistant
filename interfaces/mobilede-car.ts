@@ -17,7 +17,7 @@ export interface MobiledeCarCardProps {
 export interface MobiledeResultsCarCardProps {
   title: string;
   price: string;
-  details: string;
+  details: string[];
   location: string;
   imgSrc: string;
   href: string;
