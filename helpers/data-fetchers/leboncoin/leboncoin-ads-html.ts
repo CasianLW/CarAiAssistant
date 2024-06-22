@@ -32,7 +32,6 @@ const splitIntoArticles = (html: string): string[] => {
     articles.push(html.substring(startIndex, endIndex));
     currentIndex = endIndex;
   }
-  //   console.log("article 1:", articles[0]);
 
   return articles;
 };
@@ -49,8 +48,6 @@ const formatLocation = (location: any): string => {
 const extractDataFromArticle = (
   article: string
 ): MobiledeResultsCarCardProps | null => {
-  //   console.log("Extracting data from article...");
-
   const attributesMatch = article.match(
     /"attributes":(\[.*?\])(?=\,"location")/s
   );
@@ -59,7 +56,6 @@ const extractDataFromArticle = (
   const titleMatch = article.match(/"subject":"([^"]+)"/);
   const hrefMatch = article.match(/"url":"([^"]+)"/);
   const imgSrcMatch = article.match(/"small_url":"([^"]+)"/);
-  //   const imgSrcMatch = article.match(/"thumb_url":"([^"]+)"/);
 
   if (
     !attributesMatch ||
@@ -69,22 +65,12 @@ const extractDataFromArticle = (
     !hrefMatch ||
     !imgSrcMatch
   ) {
-    // console.error("Failed to extract data from article:", article);
-    // console.error("attributesMatch:", attributesMatch);
-    // console.error("titleMatch:", titleMatch);
-    // console.error("priceMatch:", priceMatch);
-    // console.error("locationMatch:", locationMatch);
-    // console.error("hrefMatch:", hrefMatch);
-    // console.error("imgSrcMatch:", imgSrcMatch);
     return null;
   }
-
-  //   console.log("attributesMatch:", attributesMatch[1]);
 
   let attributes = [];
   try {
     attributes = JSON.parse(attributesMatch[1]);
-    // console.log("Parsed attributes:", attributes);
   } catch (error) {
     console.error("Failed to parse attributes JSON:", error);
   }
@@ -99,8 +85,6 @@ const extractDataFromArticle = (
   const details = attributes
     .filter((attr: any) => detailsKeys.includes(attr.key))
     .map((attr: any) => attr.value_label);
-
-  //   console.log("details:", details);
 
   const location = JSON.parse(locationMatch[1]);
   const locationString = formatLocation(location);
@@ -120,15 +104,11 @@ const extractDataFromArticle = (
 export const parseLeboncoinCarsFromHtml = (
   input: ParseCarsInput
 ): ParseCarsOutput => {
-  //   console.log("Parsing lbc cars from HTML...");
   const relevantHtml = extractRelevantSection(input.html);
   const articles = splitIntoArticles(relevantHtml);
-  //   console.log("Articles:", articles.length);
   const cars: MobiledeResultsCarCardProps[] = articles
     .map(extractDataFromArticle)
     .filter((car): car is MobiledeResultsCarCardProps => car !== null);
-
-  //   console.log("Parsed lbc cars:", cars);
 
   return { cars };
 };
