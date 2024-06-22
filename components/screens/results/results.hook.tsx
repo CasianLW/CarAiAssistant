@@ -5,6 +5,7 @@ import {
 } from "@/interfaces/mobilede-car";
 import { useFetchMobiledeCars } from "@/helpers/data-fetchers/mobilede/mobilede-ads";
 import { useFetchLeboncoinCars } from "@/helpers/data-fetchers/leboncoin/leboncoin-ads";
+import { useFetchAutoscoutCars } from "@/helpers/data-fetchers/leboncoin copy/autoscout-ads";
 
 export enum AdsPlatform {
   mobilede = "mobilede",
@@ -134,6 +135,22 @@ const useSearchResults = () => {
     maxKm: "80000",
     minKm: "5000",
   });
+  const {
+    loading: loadingAutoscout,
+    error: errorAutoscout,
+    cars: carsAutoscout,
+    seeAllUrl: seeAllUrlAutoscout,
+    fetchCars: fetchCarsAutoscout,
+  } = useFetchAutoscoutCars({
+    make: "AUDI",
+    model: "A4",
+    maxYear: "2022",
+    minPrice: "10000",
+    maxPrice: "50000",
+    minYear: "2018",
+    maxKm: "80000",
+    minKm: "5000",
+  });
 
   const [allResults, setAllResults] = useState<AllAdsInterface[]>([]);
   const [filteredResults, setFilteredResults] = useState<AllAdsInterface[]>([]);
@@ -146,6 +163,7 @@ const useSearchResults = () => {
     if (openResults) {
       fetchCarsMobilede();
       fetchCarsLeboncoin();
+      fetchCarsAutoscout();
     } else {
       setAllResults([]);
     }
@@ -161,9 +179,13 @@ const useSearchResults = () => {
         ...car,
         platform: AdsPlatform.leboncoin,
       })),
+      ...carsAutoscout.map((car) => ({
+        ...car,
+        platform: AdsPlatform.autoscout,
+      })),
     ];
     setAllResults(combinedResults);
-  }, [carsMobilede, carsLeboncoin]);
+  }, [carsMobilede, carsLeboncoin, carsAutoscout]);
 
   useEffect(() => {
     switch (activePlatform) {
@@ -192,8 +214,8 @@ const useSearchResults = () => {
   };
 
   return {
-    loading: loadingMobilede || loadingLeboncoin,
-    error: errorMobilede || errorLeboncoin,
+    loading: loadingMobilede || loadingLeboncoin || loadingAutoscout,
+    error: errorMobilede || errorLeboncoin || errorAutoscout,
     allResults,
     filteredResults,
     setPlatform,
