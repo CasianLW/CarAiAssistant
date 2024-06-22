@@ -79,7 +79,7 @@ export function useFetchMobiledeCars({
 
       const output = parseCarsFromHtml({ html: htmlContent });
 
-      // console.log("Parsed cars:", output.cars[0].details);
+      // console.log("Parsed mobilede cars:", output.cars[0].details);
 
       setCars(output.cars);
       setSeeAllUrl(url);
