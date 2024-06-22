@@ -6,6 +6,16 @@ import {
 import { useFetchMobiledeCars } from "@/helpers/data-fetchers/mobilede/mobilede-ads";
 import { useFetchLeboncoinCars } from "@/helpers/data-fetchers/leboncoin/leboncoin-ads";
 
+export enum AdsPlatform {
+  mobilede = "mobilede",
+  leboncoin = "leboncoin",
+  autoscout = "autoscout",
+  allPlatforms = "allPlatforms",
+}
+
+export interface AllAdsInterface extends MobiledeResultsCarCardProps {
+  platform: AdsPlatform;
+}
 const useSearchResults = () => {
   const results: MobiledeCarCardProps[] = [
     {
@@ -90,7 +100,12 @@ const useSearchResults = () => {
     },
   ];
 
-  const { loading, error, cars, seeAllUrl, fetchCars } = useFetchMobiledeCars({
+  const {
+    loading: loadingMobilede,
+    error: errorMobilede,
+    cars: carsMobilede,
+    fetchCars: fetchCarsMobilede,
+  } = useFetchMobiledeCars({
     make: "Audi",
     model: "A4",
     maxYear: "2022",
@@ -102,6 +117,7 @@ const useSearchResults = () => {
     makeId: 1900,
     modelId: 9,
   });
+
   const {
     loading: loadingLeboncoin,
     error: errorLeboncoin,
@@ -119,31 +135,68 @@ const useSearchResults = () => {
     minKm: "5000",
   });
 
-  const [activeAdsResults, setActiveAdsResults] = useState<
-    MobiledeResultsCarCardProps[]
-  >([]);
+  const [allResults, setAllResults] = useState<AllAdsInterface[]>([]);
+  const [filteredResults, setFilteredResults] = useState<AllAdsInterface[]>([]);
+  const [activePlatform, setActivePlatform] = useState<AdsPlatform>(
+    AdsPlatform.allPlatforms
+  );
   const [openResults, setOpenResults] = useState(false);
 
   useEffect(() => {
     if (openResults) {
-      fetchCars();
-      // fetchCarsLeboncoin();
+      fetchCarsMobilede();
+      fetchCarsLeboncoin();
+    } else {
+      setAllResults([]);
     }
   }, [openResults]);
 
+  useEffect(() => {
+    const combinedResults = [
+      ...carsMobilede.map((car) => ({
+        ...car,
+        platform: AdsPlatform.mobilede,
+      })),
+      ...carsLeboncoin.map((car) => ({
+        ...car,
+        platform: AdsPlatform.leboncoin,
+      })),
+    ];
+    setAllResults(combinedResults);
+  }, [carsMobilede, carsLeboncoin]);
+
+  useEffect(() => {
+    switch (activePlatform) {
+      case AdsPlatform.mobilede:
+        setFilteredResults(
+          allResults.filter((car) => car.platform === AdsPlatform.mobilede)
+        );
+        break;
+      case AdsPlatform.leboncoin:
+        setFilteredResults(
+          allResults.filter((car) => car.platform === AdsPlatform.leboncoin)
+        );
+        break;
+      case AdsPlatform.autoscout:
+        setFilteredResults(
+          allResults.filter((car) => car.platform === AdsPlatform.autoscout)
+        );
+        break;
+      default:
+        setFilteredResults(allResults);
+    }
+  }, [activePlatform, allResults]);
+
+  const setPlatform = (platform: AdsPlatform | AdsPlatform.allPlatforms) => {
+    setActivePlatform(platform);
+  };
+
   return {
-    loading,
-    error,
-    cars,
-    seeAllUrl,
-    fetchCars,
-    loadingLeboncoin,
-    errorLeboncoin,
-    carsLeboncoin,
-    seeAllUrlLeboncoin,
-    fetchCarsLeboncoin,
-    activeAdsResults,
-    setActiveAdsResults,
+    loading: loadingMobilede || loadingLeboncoin,
+    error: errorMobilede || errorLeboncoin,
+    allResults,
+    filteredResults,
+    setPlatform,
     openResults,
     setOpenResults,
     results,
