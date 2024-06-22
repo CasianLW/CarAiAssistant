@@ -1,6 +1,9 @@
 import ButtonComponent from "@/components/general/button-component";
 import { View } from "@/components/themed";
-import { MobiledeResultsCarCardProps } from "@/interfaces/mobilede-car";
+import {
+  MobiledeCarCardProps,
+  MobiledeResultsCarCardProps,
+} from "@/interfaces/mobilede-car";
 import { FC, useEffect, useState } from "react";
 import {
   Alert,
@@ -10,9 +13,10 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
+import { AdsPlatform, AllAdsInterface } from "../results.hook";
 
 interface AdsResultsComponentProps {
-  results: MobiledeResultsCarCardProps[];
+  results: AllAdsInterface[];
   open: boolean;
 }
 
@@ -21,6 +25,19 @@ const AdsResultsComponent: FC<AdsResultsComponentProps> = ({
   open,
 }) => {
   const [fadeAnim] = useState(new Animated.Value(0)); // Initial value for opacity
+
+  const getPlatformLogo = (platform: AdsPlatform) => {
+    switch (platform) {
+      case AdsPlatform.mobilede:
+        return require("@/assets/images/logos/mobilede-logo.png");
+      case AdsPlatform.leboncoin:
+        return require("@/assets/images/logos/leboncoin-logo.png");
+      case AdsPlatform.autoscout:
+        return require("@/assets/images/logos/autoscout-logo.png");
+      default:
+        return require("@/assets/images/logos/leboncoin-logo.png");
+    }
+  };
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -56,6 +73,13 @@ const AdsResultsComponent: FC<AdsResultsComponentProps> = ({
               onError={(e) =>
                 console.error("Error loading image:", e.nativeEvent.error)
               } // Logging error if image fails to load
+            />
+            <Image
+              className="absolute max-w-[92px] h-auto  top-1 right-1 z-30"
+              //   source={{ uri: getPlatformLogo(result.platform) }}
+              source={getPlatformLogo(result.platform)}
+              style={styles.logoStyle}
+              resizeMode="contain"
             />
           </View>
           <View className="px-4 pt-2 bg-transparent">
@@ -107,6 +131,9 @@ const styles = StyleSheet.create({
     textAlign: "right",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  logoStyle: {
+    height: 24,
   },
 });
 
