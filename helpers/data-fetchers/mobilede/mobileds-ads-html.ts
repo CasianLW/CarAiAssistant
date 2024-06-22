@@ -125,11 +125,7 @@ const extractDataFromArticle = (
 
 export const parseCarsFromHtml = (input: ParseCarsInput): ParseCarsOutput => {
   const relevantHtml = extractRelevantSection(input.html);
-  //   console.log("Relevant HTML:", relevantHtml.substring(0, 100));
-  //   console.log(input.html);
-  //   console.log(input.html.substring(0, 100));
   const articles = splitIntoArticles(relevantHtml);
-  //   console.log("Articles:", articles.length);
   const cars: MobiledeResultsCarCardProps[] = articles
     .map(extractDataFromArticle)
     .filter((car): car is MobiledeResultsCarCardProps => car !== null);
