@@ -71,8 +71,8 @@ export function useFetchLeboncoinCars({
       const response = await axios.get(url, { headers });
 
       const htmlContent: string = response.data.toString();
-      //   console.log("URL Content:", url);
-      //   console.log("HTML Content:", htmlContent);
+      //   console.log("URL lbc Content:", url);
+      //   console.log("HTML lbc Content:", htmlContent);
 
       //   console.log("Fetched lbc cars starts...");
 
