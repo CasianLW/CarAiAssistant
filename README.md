@@ -69,3 +69,5 @@ Distributed under the MIT License.
 ## Contact
 
 Casian - [casian.fr](https://casian.fr/) - contact@casian.fr
+
+detox test --configuration android.release

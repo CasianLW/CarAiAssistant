@@ -1,53 +1,41 @@
 /** @type {Detox.DetoxConfig} */
 module.exports = {
+  logger: {
+    level: process.env.CI ? "debug" : undefined,
+  },
   testRunner: {
+    $0: "jest",
     args: {
-      $0: "jest",
       config: "e2e/jest.config.js",
+      _: ["e2e"],
     },
-    jest: {
-      setupTimeout: 120000,
+  },
+  artifacts: {
+    plugins: {
+      log: process.env.CI ? "failing" : undefined,
+      screenshot: "failing",
     },
   },
   apps: {
-    "ios.debug": {
-      type: "ios.app",
-      binaryPath: "ios/build/Build/Products/Debug-iphonesimulator/YOUR_APP.app",
-      build:
-        "xcodebuild -workspace ios/YOUR_APP.xcworkspace -scheme YOUR_APP -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
-    },
     "ios.release": {
       type: "ios.app",
+      build:
+        "xcodebuild -workspace ios/eastestsexample.xcworkspace -scheme eastestsexample -configuration Release -sdk iphonesimulator -arch x86_64 -derivedDataPath ios/build",
       binaryPath:
-        "ios/build/Build/Products/Release-iphonesimulator/YOUR_APP.app",
-      build:
-        "xcodebuild -workspace ios/YOUR_APP.xcworkspace -scheme YOUR_APP -configuration Release -sdk iphonesimulator -derivedDataPath ios/build",
-    },
-    "android.debug": {
-      type: "android.apk",
-      binaryPath: "android/app/build/outputs/apk/debug/app-debug.apk",
-      build:
-        "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug",
-      reversePorts: [8081],
+        "ios/build/Build/Products/Release-iphonesimulator/eastestsexample.app",
     },
     "android.release": {
       type: "android.apk",
-      binaryPath: "android/app/build/outputs/apk/release/app-release.apk",
       build:
-        "cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release",
+        "cd android && ./gradlew :app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release && cd ..",
+      binaryPath: "android/app/build/outputs/apk/release/app-release.apk",
     },
   },
   devices: {
     simulator: {
       type: "ios.simulator",
       device: {
-        type: "iPhone 15",
-      },
-    },
-    attached: {
-      type: "android.attached",
-      device: {
-        adbName: ".*",
+        type: "iPhone 14",
       },
     },
     emulator: {
@@ -58,27 +46,11 @@ module.exports = {
     },
   },
   configurations: {
-    "ios.sim.debug": {
-      device: "simulator",
-      app: "ios.debug",
-    },
-    "ios.sim.release": {
+    "ios.release": {
       device: "simulator",
       app: "ios.release",
     },
-    "android.att.debug": {
-      device: "attached",
-      app: "android.debug",
-    },
-    "android.att.release": {
-      device: "attached",
-      app: "android.release",
-    },
-    "android.emu.debug": {
-      device: "emulator",
-      app: "android.debug",
-    },
-    "android.emu.release": {
+    "android.release": {
       device: "emulator",
       app: "android.release",
     },
