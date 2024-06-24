@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useRef } from "react";
 import {
   View,
   Text,
@@ -22,7 +22,14 @@ const SearchResultsScreen: FC = () => {
     setOpenResults,
     results,
     allResults,
+    totalPages,
+    nextPage,
+    previousPage,
+    currentPage,
+    paginatedResults,
   } = useSearchResults();
+
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const [activeFilter, setActiveFilter] = React.useState<AdsPlatform>(
     AdsPlatform.allPlatforms
@@ -31,6 +38,17 @@ const SearchResultsScreen: FC = () => {
   const handleSetPlatform = (platform: AdsPlatform) => {
     setActiveFilter(platform);
     setPlatform(platform);
+    scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+  };
+
+  const handleNextPage = () => {
+    nextPage();
+    scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+  };
+
+  const handlePreviousPage = () => {
+    previousPage();
+    scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
   };
 
   return (
@@ -48,14 +66,21 @@ const SearchResultsScreen: FC = () => {
           </Text>
         </View>
       )}
-      <ScrollView className="h-full" style={globalStyles.searchContainer}>
+      <ScrollView
+        className="h-full"
+        style={globalStyles.searchContainer}
+        ref={scrollViewRef}
+      >
         <Text style={globalStyles.title}>
           {openResults ? "Liste annonces:" : "Propositions modeles:"}
         </Text>
 
         {openResults ? (
-          filteredResults.length > 0 ? (
-            <AdsResultsComponent results={filteredResults} open={openResults} />
+          paginatedResults.length > 0 ? (
+            <AdsResultsComponent
+              results={paginatedResults}
+              open={openResults}
+            />
           ) : (
             <View style={styles.noAdsContainer}>
               <Text
@@ -75,6 +100,35 @@ const SearchResultsScreen: FC = () => {
                 key={`${result.makeId}-${result.modelId}-${index}`}
               />
             ))}
+          </View>
+        )}
+        {openResults && filteredResults.length > 25 && (
+          <View className="flex flex-row justify-between  items-center mb-40">
+            <TouchableOpacity
+              onPress={handlePreviousPage}
+              disabled={currentPage === 1}
+              style={[
+                styles.paginationButton,
+                currentPage === 1 && styles.disabledPaginationButton,
+              ]}
+            >
+              <Text className="text-app-white-100 font-semibold">
+                Precedent
+              </Text>
+            </TouchableOpacity>
+            <Text className="text-app-black-200 font-semibold">
+              Page {currentPage} / {totalPages}
+            </Text>
+            <TouchableOpacity
+              onPress={handleNextPage}
+              disabled={currentPage === totalPages}
+              style={[
+                styles.paginationButton,
+                currentPage === totalPages && styles.disabledPaginationButton,
+              ]}
+            >
+              <Text className="text-app-white-100 font-semibold">Suivant</Text>
+            </TouchableOpacity>
           </View>
         )}
       </ScrollView>
@@ -191,6 +245,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 20,
+  },
+  // Pagination
+  paginationContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+    marginBottom: 92,
+  },
+  paginationButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    backgroundColor: "#337AFF",
+    borderRadius: 5,
+  },
+  disabledPaginationButton: {
+    backgroundColor: "#ccc",
   },
 });
 
