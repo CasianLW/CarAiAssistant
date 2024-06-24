@@ -12,28 +12,6 @@
   "jest": {
     "preset": "jest-expo"
   },
-  "detox": {
-    "testRunner": "jest",
-    "runnerConfig": "e2e/config.json",
-    "configurations": {
-      "ios.sim.debug": {
-        "binaryPath": "path/to/your/ios/build/Build/Products/Debug-iphonesimulator/YourApp.app",
-        "build": "xcodebuild -project ios/YourApp.xcodeproj -scheme YourApp -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
-        "type": "ios.simulator",
-        "device": {
-          "type": "iPhone 12"
-        }
-      },
-      "android.emu.debug": {
-        "binaryPath": "path/to/your/android/build/app/debug/app-debug.apk",
-        "build": "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && cd ..",
-        "type": "android.emulator",
-        "device": {
-          "avdName": "Pixel_3a_API_30_x86"
-        }
-      }
-    }
-  },
   "dependencies": {
     "@aws-amplify/react-native": "^1.0.13",
     "@expo/vector-icons": "^14.0.0",

@@ -15,5 +15,11 @@
     "module": "ES2020",
     "moduleResolution": "node"
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "e2e/**/*.ts"
+  ]
 }
