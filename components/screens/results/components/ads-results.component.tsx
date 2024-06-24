@@ -57,7 +57,7 @@ const AdsResultsComponent: FC<AdsResultsComponentProps> = ({
   };
   return (
     <Animated.View
-      className={"mb-44"}
+      className={"mb-20"}
       style={[styles.fadeContainer, { opacity: fadeAnim }]}
     >
       {results.map((result, index) => (
