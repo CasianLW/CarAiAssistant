@@ -5,7 +5,7 @@ import {
 } from "@/interfaces/mobilede-car";
 import { useFetchMobiledeCars } from "@/helpers/data-fetchers/mobilede/mobilede-ads";
 import { useFetchLeboncoinCars } from "@/helpers/data-fetchers/leboncoin/leboncoin-ads";
-import { useFetchAutoscoutCars } from "@/helpers/data-fetchers/leboncoin copy/autoscout-ads";
+import { useFetchAutoscoutCars } from "@/helpers/data-fetchers/autoscout/autoscout-ads";
 
 export enum AdsPlatform {
   mobilede = "mobilede",
@@ -13,6 +13,7 @@ export enum AdsPlatform {
   autoscout = "autoscout",
   allPlatforms = "allPlatforms",
 }
+const ADS_PER_PAGE = 20;
 
 export interface AllAdsInterface extends MobiledeResultsCarCardProps {
   platform: AdsPlatform;
@@ -159,6 +160,8 @@ const useSearchResults = () => {
   );
   const [openResults, setOpenResults] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     if (openResults) {
       fetchCarsMobilede();
@@ -188,29 +191,44 @@ const useSearchResults = () => {
   }, [carsMobilede, carsLeboncoin, carsAutoscout]);
 
   useEffect(() => {
-    switch (activePlatform) {
-      case AdsPlatform.mobilede:
-        setFilteredResults(
-          allResults.filter((car) => car.platform === AdsPlatform.mobilede)
-        );
-        break;
-      case AdsPlatform.leboncoin:
-        setFilteredResults(
-          allResults.filter((car) => car.platform === AdsPlatform.leboncoin)
-        );
-        break;
-      case AdsPlatform.autoscout:
-        setFilteredResults(
-          allResults.filter((car) => car.platform === AdsPlatform.autoscout)
-        );
-        break;
-      default:
-        setFilteredResults(allResults);
-    }
+    const results = filterResultsByPlatform(allResults, activePlatform);
+    setFilteredResults(results);
+    setCurrentPage(1); // Reset to first page when platform changes
   }, [activePlatform, allResults]);
+
+  const filterResultsByPlatform = (
+    results: AllAdsInterface[],
+    platform: AdsPlatform
+  ) => {
+    switch (platform) {
+      case AdsPlatform.mobilede:
+        return results.filter((car) => car.platform === AdsPlatform.mobilede);
+      case AdsPlatform.leboncoin:
+        return results.filter((car) => car.platform === AdsPlatform.leboncoin);
+      case AdsPlatform.autoscout:
+        return results.filter((car) => car.platform === AdsPlatform.autoscout);
+      default:
+        return results;
+    }
+  };
+
+  const paginatedResults = filteredResults.slice(
+    (currentPage - 1) * ADS_PER_PAGE,
+    currentPage * ADS_PER_PAGE
+  );
+
+  const totalPages = Math.ceil(filteredResults.length / ADS_PER_PAGE);
 
   const setPlatform = (platform: AdsPlatform | AdsPlatform.allPlatforms) => {
     setActivePlatform(platform);
+  };
+
+  const nextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const previousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
 
   return {
@@ -222,6 +240,11 @@ const useSearchResults = () => {
     openResults,
     setOpenResults,
     results,
+    nextPage,
+    previousPage,
+    currentPage,
+    totalPages,
+    paginatedResults,
   };
 };
 
