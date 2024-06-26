@@ -1,5 +1,6 @@
 import AppleIcon from "@/assets/images/icons/apple.icon";
 import GoogleIcon from "@/assets/images/icons/google.icon";
+import { signInWithFacebook, signInWithGoogle } from "@/services/auth.service";
 import React, { FC } from "react";
 import {
   TouchableOpacity,
@@ -11,28 +12,54 @@ import {
 
 interface ButtonComponentProps {
   google?: boolean;
-  apple?: boolean;
+  facebook?: boolean;
   register?: boolean;
+  soon?: boolean;
 }
 
 const ExternalConnexionButtons: FC<ButtonComponentProps> = ({
   google = true,
-  apple = true,
+  facebook = true,
   register = false,
+  soon = true,
 }) => {
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithGoogle();
+      console.log("Google Login Success:", result);
+    } catch (error) {
+      console.error("Google Login Error:", error);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      const result = await signInWithFacebook();
+      console.log("Facebook Login Success:", result);
+    } catch (error) {
+      console.error("Facebook Login Error:", error);
+    }
+  };
   return (
-    <View className="gap-2">
+    <View>
+      {soon && (
+        <View className="z-50 bg-app-black-200 opacity-60 absolute h-[100%] w-full rounded-2xl">
+          <Text className="text-app-white-100 text-xl text-center my-auto -rotate-12">
+            Coming soon..
+          </Text>
+        </View>
+      )}
       {google && (
-        <TouchableOpacity style={[styles.button]}>
+        <TouchableOpacity style={[styles.button]} onPress={handleGoogleLogin}>
           <GoogleIcon />
 
           <Text style={[styles.buttonText]}>Connextion avec Google</Text>
         </TouchableOpacity>
       )}
-      {apple && (
-        <TouchableOpacity style={[styles.button]}>
+      {facebook && (
+        <TouchableOpacity style={[styles.button]} onPress={handleFacebookLogin}>
           <AppleIcon fill={"#000"} />
-          <Text style={[styles.buttonText]}>Connextion avec Apple</Text>
+          <Text style={[styles.buttonText]}>Connextion avec facebook</Text>
         </TouchableOpacity>
       )}
     </View>
