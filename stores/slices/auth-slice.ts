@@ -1,13 +1,8 @@
-// stores/slices/authSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CognitoUser } from "amazon-cognito-identity-js";
+import { User } from "@/interfaces/auth";
 
 interface AuthState {
-  userData: {
-    email: string;
-    emailVerified: boolean;
-    userId: string;
-  } | null;
+  userData: User | null;
   isAuthenticated: boolean;
   isGuest: boolean;
 }
@@ -22,7 +17,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<AuthState["userData"]>) => {
+    setUser: (state, action: PayloadAction<User>) => {
       state.userData = action.payload;
       state.isAuthenticated = true;
       state.isGuest = false;
