@@ -1,21 +1,24 @@
 import { useState } from "react";
-import { Auth } from "aws-amplify";
-import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "@/app/_layout";
-import { useAuth } from "@/context/auth-context";
-import { useDispatch } from "react-redux";
 import { setUser } from "@/stores/slices/auth-slice";
-import { useSelector } from "react-redux";
 import { RootState } from "@/stores/main-store";
+import { apiLogin } from "@/utils/api";
+import { DecodedToken, LoginPayload } from "@/interfaces/auth";
+// import { decode as atob } from "base-64";
+import JWT from "expo-jwt";
 
-type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
+// const jwtDecode = require("jwt-decode");
+// import { jwtDecode } from "jwt-decode";
 
 const useSignIn = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const { setUser } = useAuth();
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
+  const [error, setError] = useState("");
+
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -25,30 +28,45 @@ const useSignIn = () => {
     if (isSigningIn) return;
     setIsSigningIn(true);
     try {
-      const user = await Auth.signIn(username, password);
-      // console.log("User signed in", user);
-      const userData = {
-        // id: user.attributes.sub,
-        email: user.attributes.email,
-        emailVerified: user.attributes.email_verified,
-        userId: user.username,
-      };
-      // console.log("User data", userData);
-      dispatch(setUser(userData));
+      const loginPayload: LoginPayload = { email, password };
+      const response = await apiLogin(loginPayload);
+      const { access_token } = response.data;
+
+      if (access_token) {
+        const decodedToken = JWT.decode(
+          access_token,
+          process.env.JWT_SECRET || ""
+        );
+        const userData: DecodedToken = {
+          email: decodedToken.email,
+          userId: decodedToken.userId,
+          username: decodedToken.username,
+          roles: decodedToken.roles,
+          isBanned: decodedToken.isBanned,
+          isPremium: decodedToken.isPremium,
+        };
+        dispatch(setUser(userData));
+      } else {
+        throw new Error("No access token found in response");
+      }
     } catch (error) {
-      console.error("Sign in error", error);
+      setError("Connexion échouée, vérifiez les identifiants et réeseyez.");
+      setIsErrorModalVisible(true);
     } finally {
       setIsSigningIn(false);
     }
   };
 
   return {
-    username,
-    setUsername,
+    email,
+    setEmail,
     password,
     setPassword,
     isSigningIn,
     handleSignIn,
+    error,
+    isErrorModalVisible,
+    setIsErrorModalVisible,
   };
 };
 
