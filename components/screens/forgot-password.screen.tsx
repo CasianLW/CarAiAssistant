@@ -1,29 +1,30 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import {
   View,
   Text,
-  TextInput,
-  Button,
   StyleSheet,
   Modal,
-  Image,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ActivityIndicator,
+  Button,
 } from "react-native";
-import { Auth } from "aws-amplify";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "@/app/_layout";
 import { useNavigation } from "@react-navigation/native";
-import ButtonComponent from "../general/button-component";
 import useForgotPassword from "@/hooks/use-forgot-password.hook";
 import globalStyles from "@/styles/global.styles";
 import InputComponent from "../general/input-component";
+import ButtonComponent from "../general/button-component";
 import MailIcon from "@/assets/images/icons/mail.icon";
 import LockIcon from "@/assets/images/icons/lock.icon";
+
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
 
 const ForgotPasswordScreen: FC = () => {
   const {
-    username,
-    setUsername,
+    email,
+    setEmail,
     code,
     setCode,
     newPassword,
@@ -32,26 +33,58 @@ const ForgotPasswordScreen: FC = () => {
     setIsResetModalVisible,
     handleForgotPassword,
     handlePasswordResetConfirm,
+    isProcessing,
+    errors,
+    showSuccessMessage,
   } = useForgotPassword();
   const navigation = useNavigation<SignInNavigationProp>();
 
   return (
-    <View style={globalStyles.screenRegistrationContainer}>
-      <View>
-        <Text
-          style={globalStyles.title}
-          className="text-app-black-300 mb-6 text-center"
-        >
-          Mot de passe oublié ?
-        </Text>
-        <Text
-          className="text-app-black-300 mb-6 mt-2 text-center"
-          style={globalStyles.subtitle}
-        >
-          Entrez votre adresse email pour réinitialiser votre mot de passe
-        </Text>
-      </View>
-      <View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={globalStyles.screenRegistrationContainer}>
+        {isProcessing && (
+          <View style={globalStyles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        )}
+        <View>
+          <Text style={globalStyles.title} className="mb-6 text-center">
+            Mot de passe oublié ?
+          </Text>
+          <Text className="mb-6 mt-2 text-center" style={globalStyles.subtitle}>
+            Entrez votre adresse email pour réinitialiser votre mot de passe
+          </Text>
+          <InputComponent
+            onChangeText={(text) => setEmail(text)}
+            placeholder="monemail@mail.com"
+            value={email}
+            icon={<MailIcon fill="#808080" />}
+          />
+          {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+          {errors.message && (
+            <Text style={styles.errorText}>{errors.message}</Text>
+          )}
+          <ButtonComponent
+            onPress={handleForgotPassword}
+            title="Recevoir le code"
+          />
+          {showSuccessMessage && (
+            <View>
+              <Text className="text-green-500">Réinitialisation réussie !</Text>
+            </View>
+          )}
+          <Text className="text-center text-app-blue-300 text-base ">Ou</Text>
+          <ButtonComponent
+            onPress={() => navigation.navigate("SignUp")}
+            title="Je crée mon compte !"
+            secondary={true}
+          />
+          <ButtonComponent
+            onPress={() => navigation.navigate("SignIn")}
+            title="Je me connecte !"
+            secondary={true}
+          />
+        </View>
         <Modal
           animationType="slide"
           transparent={true}
@@ -63,29 +96,12 @@ const ForgotPasswordScreen: FC = () => {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={globalStyles.title}>Reset Password</Text>
-              {/* <TextInput
-                style={globalStyles.lightInput}
-                className="w-[240px]"
-                placeholder="Confirmation Code"
-                placeholderTextColor="#888"
-                value={code}
-                onChangeText={setCode}
-              /> */}
               <InputComponent
                 onChangeText={setCode}
                 placeholder="Confirmation Code"
                 value={code}
                 icon={<MailIcon fill="#808080" />}
               />
-              {/* <TextInput
-                style={globalStyles.lightInput}
-                className="w-[240px]"
-                placeholder="New Password"
-                placeholderTextColor="#888"
-                secureTextEntry
-                value={newPassword}
-                onChangeText={setNewPassword}
-              /> */}
               <InputComponent
                 onChangeText={setNewPassword}
                 placeholder="Nouveau mot de passe"
@@ -93,15 +109,16 @@ const ForgotPasswordScreen: FC = () => {
                 secure={true}
                 icon={<LockIcon fill={"#808080"} />}
               />
-              {/* <Button
-                title="Confirm Reset"
-                onPress={handlePasswordResetConfirm}
-              /> */}
+              {errors.newPassword && (
+                <Text style={styles.errorText}>{errors.newPassword}</Text>
+              )}
+              {errors.message && (
+                <Text style={styles.errorText}>{errors.message}</Text>
+              )}
               <ButtonComponent
                 onPress={handlePasswordResetConfirm}
                 title="Confirm Reset"
               />
-
               <Button
                 title="Cancel"
                 color={"#FF0000"}
@@ -110,60 +127,12 @@ const ForgotPasswordScreen: FC = () => {
             </View>
           </View>
         </Modal>
-
-        {/* <TextInput
-          className="placeholder-gray-500"
-          placeholderTextColor="#888"
-          style={globalStyles.lightInput}
-          placeholder="Username"
-          onChangeText={(text) => setUsername(text)}
-          value={username}
-        /> */}
-        <InputComponent
-          onChangeText={(text) => setUsername(text)}
-          placeholder="monemail@mail.com"
-          value={username}
-          icon={<MailIcon fill="#808080" />}
-        />
-        {/* <Button title="Submit" onPress={handleForgotPassword} /> */}
-        <View>
-          <ButtonComponent
-            onPress={handleForgotPassword}
-            title="Recevoir le code"
-          />
-        </View>
-        <Text className="text-center text-app-blue-300 text-base ">Ou</Text>
-
-        <ButtonComponent
-          onPress={() => navigation.navigate("SignUp")}
-          title="Je crée mon compte !"
-          secondary={true}
-        />
-        <ButtonComponent
-          onPress={() => navigation.navigate("SignIn")}
-          title="Je me connecte !"
-          secondary={true}
-        />
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  input: {
-    // width: "100%",
-    marginBottom: 10,
-    padding: 10,
-    backgroundColor: "#EEECE9",
-    borderRadius: 5,
-    // borderColor: "gray",
-    // borderWidth: 1,
-  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -184,6 +153,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 14,
+    marginTop: 5,
+    marginBottom: 5,
+    textAlign: "center",
   },
 });
 
