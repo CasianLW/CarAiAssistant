@@ -12,8 +12,6 @@ import { useFonts } from "expo-font";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/stores/main-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Amplify } from "aws-amplify";
-import config from "../amplifyconfiguration";
 import SignInScreen from "@/components/screens/sign-in.screen";
 import SignUpScreen from "@/components/screens/sign-up.screen";
 import ForgotPasswordScreen from "@/components/screens/forgot-password.screen";
@@ -26,8 +24,8 @@ import SearchUnknownScreen from "@/components/screens/categories/unknown.search"
 import SearchCarScreen from "@/components/screens/categories/car.search";
 import SearchCategoryScreen from "@/components/screens/categories/category.search";
 import { sharedScreens } from "@/components/tabs/sharedScreens";
-
-Amplify.configure(config);
+import { apiGetUserProfile } from "@/utils/api";
+import { decodeToken, getStoredToken } from "@/helpers/auth-helpers";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const MainTab = createBottomTabNavigator<MainTabParamList>();
@@ -43,9 +41,6 @@ export type MainTabParamList = {
   Home: undefined;
   Profile: undefined;
   Login: undefined;
-  // SearchUnknown: undefined;
-  // SearchCar: undefined;
-  // SearchCategory: undefined;
 };
 
 const AuthNavigator: FC<{ hasOnboarded: boolean }> = ({ hasOnboarded }) => (
@@ -64,9 +59,6 @@ const MainAppNavigator: FC = () => (
   <MainTab.Navigator>
     <MainTab.Screen name="Home" component={HomeScreen} />
     <MainTab.Screen name="Profile" component={ProfileScreen} />
-    {/* <MainTab.Screen name="SearchUnknown" component={SearchUnknownScreen} />
-    <MainTab.Screen name="SearchCar" component={SearchCarScreen} />
-    <MainTab.Screen name="SearchCategory" component={SearchCategoryScreen} /> */}
     {sharedScreens}
   </MainTab.Navigator>
 );
@@ -79,30 +71,11 @@ const GuestAppNavigator: FC = () => {
   };
 
   return (
-    <MainTab.Navigator
-    // styles for the bottom tab bar (menu)
-    // screenOptions={{
-    //   tabBarStyle: {
-    //     backgroundColor: "#337AFF", // Adjust the background color as needed
-    //     borderTopWidth: 0, // Remove the top border
-    //     elevation: 0, // Remove shadow on Android
-    //     shadowOpacity: 0, // Remove shadow on iOS
-    //     borderWidth: 0,
-    //     shadowRadius: 0,
-    //     shadowOffset: {
-    //       width: 0,
-    //       height: 0,
-    //     },
-    //   },
-    //   tabBarActiveTintColor: "#FFFFFF",
-    //   tabBarInactiveTintColor: "#BBBBBB",
-    // }}
-    >
+    <MainTab.Navigator>
       <MainTab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          //added false so the rest of styles not applied
           headerShown: false,
           headerTitle: "",
           headerStyle: {
@@ -124,11 +97,6 @@ const GuestAppNavigator: FC = () => {
           },
         })}
       />
-
-      {/* <MainTab.Screen name="SearchUnknown" component={SearchUnknownScreen} />
-      <MainTab.Screen name="SearchCar" component={SearchCarScreen} />
-      <MainTab.Screen name="SearchCategory" component={SearchCategoryScreen} /> */}
-
       {sharedScreens}
     </MainTab.Navigator>
   );
@@ -145,7 +113,6 @@ const RootLayout: FC = () => {
   useEffect(() => {
     const checkOnboarding = async () => {
       const onboarded = await AsyncStorage.getItem("hasOnboarded");
-      // console.log("Onboarding status from AsyncStorage:", onboarded); // Debug
       setHasOnboarded(onboarded === "true");
       setIsLoading(false);
     };
@@ -156,25 +123,23 @@ const RootLayout: FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const user = await Amplify.Auth.currentAuthenticatedUser();
-        const userData = {
-          email: user.attributes.email,
-          emailVerified: user.attributes.email_verified,
-          userId: user.username,
-        };
-        dispatch(setUser(userData));
+        const token = await getStoredToken();
+        if (token) {
+          const decodedToken = decodeToken(token);
+          const userProfile = await apiGetUserProfile(decodedToken.userId);
+          dispatch(setUser(userProfile));
+        } else {
+          dispatch(clearUser());
+        }
       } catch (error) {
         dispatch(clearUser());
       }
     };
 
     checkAuth();
-  }, []);
+  }, [dispatch]);
 
   const [loaded, error] = useFonts({
-    // SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-    // Urbanist: require("../assets/fonts/Urbanist-VariableFont_wght.ttf"),
-    // UrbanistItalic: require("../assets/fonts/Urbanist-Italic-VariableFont_wght.ttf"),
     UrbanistBlack900: require("../assets/fonts/Urbanist-Black.ttf"),
     UrbanistBlackItalic900: require("../assets/fonts/Urbanist-BlackItalic.ttf"),
     UrbanistBold700: require("../assets/fonts/Urbanist-Bold.ttf"),
@@ -212,8 +177,6 @@ const RootLayout: FC = () => {
   if (!loaded || isLoading) {
     return null; // or a loading spinner
   }
-
-  // console.log("hasOnboarded:", hasOnboarded); // Debug
 
   return (
     <NavigationContainer independent={true} theme={AppTheme}>
