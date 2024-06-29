@@ -82,8 +82,8 @@ export const parseAutoscoutCarsFromHtml = (
     .map(extractDataFromListing)
     .filter((car): car is MobiledeResultsCarCardProps => car !== null);
 
-  console.log("listings length:", listings.length);
-  console.log("cars length:", cars.length);
+  // console.log("Autoscout listings length:", listings.length);
+  console.log("Autoscout cars length:", cars.length);
 
   return { cars };
 };

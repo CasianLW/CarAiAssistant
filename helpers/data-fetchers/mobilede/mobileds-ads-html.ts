@@ -129,6 +129,7 @@ export const parseCarsFromHtml = (input: ParseCarsInput): ParseCarsOutput => {
   const cars: MobiledeResultsCarCardProps[] = articles
     .map(extractDataFromArticle)
     .filter((car): car is MobiledeResultsCarCardProps => car !== null);
+  console.log("Mobilede cars length:", cars.length);
 
   return { cars };
 };
