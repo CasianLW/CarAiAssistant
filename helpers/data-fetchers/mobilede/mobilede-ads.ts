@@ -73,6 +73,8 @@ export function useFetchMobiledeCars({
     setLoading(true);
 
     try {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+
       const response = await axios.get(url, { headers });
 
       const htmlContent: string = response.data.toString();
