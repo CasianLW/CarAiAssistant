@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   ViewStyle,
+  TextStyle,
 } from "react-native";
 
 interface ButtonComponentProps {
@@ -14,7 +15,7 @@ interface ButtonComponentProps {
   disabled?: boolean;
   disabledAction?: boolean;
   white?: boolean;
-  style?: ViewStyle;
+  style?: ViewStyle | TextStyle;
   icon?: ReactElement;
 }
 
