@@ -30,7 +30,7 @@ export function useFetchAutoscoutCars({
   const [error, setError] = useState<string | null>(null);
 
   const fetchCars = useCallback(async () => {
-    if (!make || !model || !maxYear) {
+    if (!make || !model || !minYear) {
       console.error(
         "Make, model, and year are required parameters (autoscout)."
       );
@@ -55,7 +55,7 @@ export function useFetchAutoscoutCars({
     setLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       const response = await axios.get(url, { headers });
 
       const htmlContent: string = response.data.toString();
