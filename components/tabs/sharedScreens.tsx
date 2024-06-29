@@ -6,12 +6,13 @@ import SearchUnknownScreen from "@/components/screens/categories/unknown.search"
 import SearchCarScreen from "@/components/screens/categories/car.search";
 import SearchCategoryScreen from "@/components/screens/categories/category.search";
 import SearchResultsScreen from "../screens/results/results.screen";
+import { VehicleAiApiResponse, VehicleAiData } from "@/interfaces/api-datas";
 
 export type SharedTabParamList = {
   SearchUnknown: undefined;
   SearchCar: undefined;
   SearchCategory: undefined;
-  SearchResults: undefined;
+  SearchResults: { results: VehicleAiData } | undefined;
 };
 
 const { Screen } = createBottomTabNavigator<SharedTabParamList>();
