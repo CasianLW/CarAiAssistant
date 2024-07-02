@@ -60,15 +60,18 @@ const useSignUp = () => {
     setIsProcessing(true);
 
     try {
+      // console.log("Registering user...");
       const registerPayload: RegisterPayload = { username, email, password };
       const response = await apiRegister(registerPayload);
       const { access_token } = response.data;
 
+      // console.log("Register response:", response.data);
       if (access_token) {
         const decodedToken = JWT.decode(
           access_token,
           process.env.JWT_SECRET || ""
         );
+        // console.log("Decoded token:", decodedToken);
         const userData: DecodedToken = {
           email: decodedToken.email,
           userId: decodedToken.userId,
@@ -77,6 +80,7 @@ const useSignUp = () => {
           isBanned: decodedToken.isBanned,
           isPremium: decodedToken.isPremium,
         };
+        // console.log("User data:", userData);
         dispatch(setUser(userData));
       } else {
         setIsMessageModalOpen(true);
