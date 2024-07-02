@@ -36,3 +36,8 @@ export interface VehicleAiApiResponse {
 export interface VehicleAiData extends VehicleAiApiResponse {
   filters: FilterData;
 }
+export interface RapportPayloadData {
+  userId: string;
+  userLogged: boolean;
+  vehicleData: MobiledeCarCardProps;
+}
