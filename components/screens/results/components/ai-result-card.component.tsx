@@ -8,13 +8,14 @@ import { calculateLeasing } from "@/helpers/calculate-leasing";
 
 const AiResultCardComponent: FC<{
   car: MobiledeCarCardProps;
-  onButton: () => void;
-}> = ({ car, onButton }) => {
-  const [fetchEnabled, setFetchEnabled] = useState(false); // State to control query fetching
+  // onButton: () => void;
+  onFetch: (car: MobiledeCarCardProps) => void;
+}> = ({ car, onFetch }) => {
+  // const [fetchEnabled, setFetchEnabled] = useState(false); // State to control query fetching
 
-  const accessAds = () => {
-    setFetchEnabled(true); // Enable fetching when the button is pressed
-  };
+  // const accessAds = () => {
+  //   setFetchEnabled(true); // Enable fetching when the button is pressed
+  // };
 
   return (
     <View className="bg-app-blue-200 rounded-2xl p-3  mt-6">
@@ -22,8 +23,7 @@ const AiResultCardComponent: FC<{
         style={{ fontFamily: "UrbanistSemiBold600" }}
         className="text-xl text-center text-app-white-100"
       >
-        {car.make}
-        {car.model}
+        {car.make} {car.model}
       </Text>
       <View className="flex flex-row justify-between">
         <Text className="text-app-blue-500 text-base">{car.year}+</Text>
@@ -59,7 +59,9 @@ const AiResultCardComponent: FC<{
       {/* {isLoading ? ( */}
       {/* //   <Text>Loading...</Text> */}
       {/* ) : ( */}
-      <ButtonComponent onPress={onButton} title="Voir annonce" />
+      {/* <ButtonComponent onPress={onButton} title="Voir annonce" /> */}
+      <ButtonComponent onPress={() => onFetch(car)} title="Voir annonce" />
+
       {/* // <ButtonComponent onPress={accessAds} title="Voir annonce" /> */}
       {/* )} */}
     </View>
