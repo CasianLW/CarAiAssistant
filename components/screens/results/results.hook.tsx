@@ -6,6 +6,7 @@ import {
 import { useFetchMobiledeCars } from "@/helpers/data-fetchers/mobilede/mobilede-ads";
 import { useFetchLeboncoinCars } from "@/helpers/data-fetchers/leboncoin/leboncoin-ads";
 import { useFetchAutoscoutCars } from "@/helpers/data-fetchers/autoscout/autoscout-ads";
+import { FilterData } from "../categories/steps/filter.step";
 
 export enum AdsPlatform {
   mobilede = "mobilede",
@@ -18,106 +19,117 @@ const ADS_PER_PAGE = 20;
 export interface AllAdsInterface extends MobiledeResultsCarCardProps {
   platform: AdsPlatform;
 }
-const useSearchResults = () => {
-  const results: MobiledeCarCardProps[] = [
-    {
-      makeId: 1,
-      make: "Toyota",
-      modelId: 101,
-      model: "Corolla",
-      year: 2022,
-      price: 20000,
-      consumption: 6,
-      fuel_cost: 1.5,
-      annual_maintenance: 600,
-      registration_cost: 250,
-      estimated_insurance: 800,
-      max_km: 300000,
-      description:
-        "Reliable family car with good fuel efficiency and low maintenance costs.",
-    },
-    {
-      makeId: 1,
-      make: "Toyota",
-      modelId: 1011,
-      model: "Corolla",
-      year: 2022,
-      price: 20000,
-      consumption: 6,
-      fuel_cost: 1.5,
-      annual_maintenance: 600,
-      registration_cost: 250,
-      estimated_insurance: 800,
-      max_km: 300000,
-      description:
-        "Reliable family car with good fuel efficiency and low maintenance costs.",
-    },
-    {
-      makeId: 1,
-      make: "Toyota",
-      modelId: 1011,
-      model: "Corolla",
-      year: 2022,
-      price: 20000,
-      consumption: 6,
-      fuel_cost: 1.5,
-      annual_maintenance: 600,
-      registration_cost: 250,
-      estimated_insurance: 800,
-      max_km: 300000,
-      description:
-        "Reliable family car with good fuel efficiency and low maintenance costs.",
-    },
-    {
-      makeId: 1,
-      make: "Toyota",
-      modelId: 10211,
-      model: "Corolla",
-      year: 2022,
-      price: 20000,
-      consumption: 6,
-      fuel_cost: 1.5,
-      annual_maintenance: 600,
-      registration_cost: 250,
-      estimated_insurance: 800,
-      max_km: 300000,
-      description:
-        "Reliable family car with good fuel efficiency and low maintenance costs.",
-    },
-    {
-      makeId: 1,
-      make: "Toyota",
-      modelId: 10111,
-      model: "Corolla",
-      year: 2022,
-      price: 20000,
-      consumption: 6,
-      fuel_cost: 1.5,
-      annual_maintenance: 600,
-      registration_cost: 250,
-      estimated_insurance: 800,
-      max_km: 300000,
-      description:
-        "Reliable family car with good fuel efficiency and low maintenance costs.",
-    },
-  ];
+const useSearchResults = (
+  aiResults: MobiledeCarCardProps[],
+  chosenCarToFetch: MobiledeCarCardProps | null,
+  carFilters: FilterData
+) => {
+  // const results: MobiledeCarCardProps[] = [
+  //   {
+  //     makeId: 1,
+  //     make: "Toyota",
+  //     modelId: 101,
+  //     model: "Corolla",
+  //     year: 2022,
+  //     price: 20000,
+  //     consumption: 6,
+  //     fuel_cost: 1.5,
+  //     annual_maintenance: 600,
+  //     registration_cost: 250,
+  //     estimated_insurance: 800,
+  //     max_km: 300000,
+  //     description:
+  //       "Reliable family car with good fuel efficiency and low maintenance costs.",
+  //   },
+  //   {
+  //     makeId: 1,
+  //     make: "Toyota",
+  //     modelId: 1011,
+  //     model: "Corolla",
+  //     year: 2022,
+  //     price: 20000,
+  //     consumption: 6,
+  //     fuel_cost: 1.5,
+  //     annual_maintenance: 600,
+  //     registration_cost: 250,
+  //     estimated_insurance: 800,
+  //     max_km: 300000,
+  //     description:
+  //       "Reliable family car with good fuel efficiency and low maintenance costs.",
+  //   },
+  //   {
+  //     makeId: 1,
+  //     make: "Toyota",
+  //     modelId: 1011,
+  //     model: "Corolla",
+  //     year: 2022,
+  //     price: 20000,
+  //     consumption: 6,
+  //     fuel_cost: 1.5,
+  //     annual_maintenance: 600,
+  //     registration_cost: 250,
+  //     estimated_insurance: 800,
+  //     max_km: 300000,
+  //     description:
+  //       "Reliable family car with good fuel efficiency and low maintenance costs.",
+  //   },
+  //   {
+  //     makeId: 1,
+  //     make: "Toyota",
+  //     modelId: 10211,
+  //     model: "Corolla",
+  //     year: 2022,
+  //     price: 20000,
+  //     consumption: 6,
+  //     fuel_cost: 1.5,
+  //     annual_maintenance: 600,
+  //     registration_cost: 250,
+  //     estimated_insurance: 800,
+  //     max_km: 300000,
+  //     description:
+  //       "Reliable family car with good fuel efficiency and low maintenance costs.",
+  //   },
+  //   {
+  //     makeId: 1,
+  //     make: "Toyota",
+  //     modelId: 10111,
+  //     model: "Corolla",
+  //     year: 2022,
+  //     price: 20000,
+  //     consumption: 6,
+  //     fuel_cost: 1.5,
+  //     annual_maintenance: 600,
+  //     registration_cost: 250,
+  //     estimated_insurance: 800,
+  //     max_km: 300000,
+  //     description:
+  //       "Reliable family car with good fuel efficiency and low maintenance costs.",
+  //   },
+  // ];
 
+  const results = aiResults || [];
   const {
     loading: loadingMobilede,
     error: errorMobilede,
     cars: carsMobilede,
     fetchCars: fetchCarsMobilede,
+    seeAllUrl: seeAllUrlMobilede,
   } = useFetchMobiledeCars({
-    make: "Audi",
-    model: "A4",
-    maxYear: "2022",
-    minPrice: "10000",
-    maxPrice: "50000",
-    minYear: "2018",
-    maxKm: "80000",
-    minKm: "5000",
-    makeId: 1900,
-    modelId: 9,
+    make: chosenCarToFetch?.make || "",
+    model: chosenCarToFetch?.model || "",
+    maxYear: carFilters.maxYear,
+    minPrice: chosenCarToFetch?.price
+      ? `${chosenCarToFetch?.price * 0.6}`
+      : "0",
+    maxPrice: chosenCarToFetch?.price
+      ? `${chosenCarToFetch?.price * 1.3}`
+      : "0",
+    minYear: `${chosenCarToFetch?.year}` || "0",
+    maxKm: "200000",
+    // maxKm: `${chosenCarToFetch?.max_km}` || "1000000",
+    minKm: carFilters.minKm,
+    makeId: chosenCarToFetch?.makeId || 0,
+    modelId: chosenCarToFetch?.modelId || 0,
   });
 
   const {
@@ -127,14 +139,18 @@ const useSearchResults = () => {
     seeAllUrl: seeAllUrlLeboncoin,
     fetchCars: fetchCarsLeboncoin,
   } = useFetchLeboncoinCars({
-    make: "AUDI",
-    model: "A4",
-    maxYear: "2022",
-    minPrice: "10000",
-    maxPrice: "50000",
-    minYear: "2018",
-    maxKm: "80000",
-    minKm: "5000",
+    make: chosenCarToFetch?.make || "",
+    model: chosenCarToFetch?.model || "",
+    maxYear: carFilters.maxYear,
+    minPrice: chosenCarToFetch?.price
+      ? `${chosenCarToFetch?.price * 0.7}`
+      : "0",
+    maxPrice: chosenCarToFetch?.price
+      ? `${chosenCarToFetch?.price * 1.8}`
+      : "0",
+    minYear: `${chosenCarToFetch?.year}` || "0",
+    maxKm: `${chosenCarToFetch?.max_km}` || "1000000",
+    minKm: carFilters.minKm,
   });
   const {
     loading: loadingAutoscout,
@@ -143,14 +159,18 @@ const useSearchResults = () => {
     seeAllUrl: seeAllUrlAutoscout,
     fetchCars: fetchCarsAutoscout,
   } = useFetchAutoscoutCars({
-    make: "AUDI",
-    model: "A4",
-    maxYear: "2022",
-    minPrice: "10000",
-    maxPrice: "50000",
-    minYear: "2018",
-    maxKm: "80000",
-    minKm: "5000",
+    make: chosenCarToFetch?.make || "",
+    model: chosenCarToFetch?.model || "",
+    maxYear: carFilters.maxYear,
+    minPrice: chosenCarToFetch?.price
+      ? `${chosenCarToFetch?.price * 0.7}`
+      : "0",
+    maxPrice: chosenCarToFetch?.price
+      ? `${chosenCarToFetch?.price * 1.8}`
+      : "0",
+    minYear: `${chosenCarToFetch?.year}` || "0",
+    maxKm: `${chosenCarToFetch?.max_km}` || "1000000",
+    minKm: carFilters.minKm,
   });
 
   const [allResults, setAllResults] = useState<AllAdsInterface[]>([]);
@@ -231,11 +251,39 @@ const useSearchResults = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
 
+  useEffect(() => {
+    console.log("Chosen car to fetch: ", chosenCarToFetch);
+    console.log("Active platform: ", activePlatform);
+    console.log("carFilters: ", carFilters);
+    if (chosenCarToFetch) {
+      setOpenResults(true); // Open results view
+      // Trigger fetching logic based on the chosen platform
+      switch (activePlatform) {
+        case AdsPlatform.mobilede:
+          fetchCarsMobilede();
+          break;
+        case AdsPlatform.leboncoin:
+          fetchCarsLeboncoin();
+          break;
+        case AdsPlatform.autoscout:
+          fetchCarsAutoscout();
+          break;
+        default:
+          fetchCarsMobilede();
+          fetchCarsLeboncoin();
+          fetchCarsAutoscout();
+
+        // console.error("Invalid platform selected");
+      }
+    }
+  }, [chosenCarToFetch, activePlatform]);
   return {
     loading: loadingMobilede || loadingLeboncoin || loadingAutoscout,
     error: errorMobilede || errorLeboncoin || errorAutoscout,
     allResults,
+    setAllResults,
     filteredResults,
+    setFilteredResults,
     setPlatform,
     openResults,
     setOpenResults,
@@ -245,6 +293,12 @@ const useSearchResults = () => {
     currentPage,
     totalPages,
     paginatedResults,
+    seeAllUrlAutoscout,
+    seeAllUrlLeboncoin,
+    seeAllUrlMobilede,
+    carsAutoscout,
+    carsLeboncoin,
+    carsMobilede,
   };
 };
 
