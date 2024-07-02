@@ -1,23 +1,27 @@
-# Luxury Vehicle Rental App
+# AI-Driven Car Selection App
 
 ![gif](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGM1NWt5NWh2bDFoeGViZzFtZzNnNWpwZjY4dzlraGFhZTBzZHpncSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XCnxhPBeOhlc6pUcN0/giphy.gif)
 
-Welcome to App Rental, the premier app for renting luxury vehicles effortlessly. Built with React Native and TypeScript, this app offers a seamless and intuitive experience for users looking to rent high-end cars with just a few taps. Whether you're looking to make a grand entrance at an event or simply want to enjoy the thrill of driving a luxury car, App Rental has you covered.
+Welcome to the AI Car Selector, a cutting-edge app designed to help users discover their ideal car matches based on AI-driven recommendations. Built with React Native and TypeScript, this app leverages advanced algorithms to tailor vehicle suggestions to your personal preferences and requirements, ensuring a customized car shopping experience.
 
 ## Features
 
-- **Browse a Wide Selection of Luxury Vehicles**: Choose from a curated list of high-end cars, including the latest models from top luxury brands.(coming soon)
-- **Seamless Booking Experience**: Book your ride in just a few steps, with real-time availability and transparent pricing.(coming soon)
-- **Personalized Recommendations**: Get suggestions based on your preferences and past bookings.(coming soon)
-- **Secure Payment Gateway**: Complete transactions with ease and security using our integrated payment system.(coming soon)
+- **AI-Powered Recommendations**: Receive personalized car suggestions based on sophisticated AI analysis of your preferences and driving habits.
+- **Explore a Diverse Range of Makes and Models**: Dive into a detailed catalog of cars, from luxury to economy, curated to suit a variety of tastes and budgets.
+- **Intuitive Selection Process**: Easily navigate through the car selection process with a user-friendly interface designed for optimal user experience.
+- **Secure and Efficient**: Enjoy a secure, fast, and efficient way to explore your car options without the hassle.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (LTS version)
+Ensure you have the following installed:
+
+- Node.js (LTS version recommended)
 - npm or Yarn
 - Expo CLI
+
+To install Expo CLI globally:
 
 ```bash
 npm install --global expo-cli
@@ -28,8 +32,8 @@ npm install --global expo-cli
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/CasianLW/CarRentalProject.git
-cd carrentalproject
+git clone https://github.com/CasianLW/CarAiAssistant.git
+cd CarAiAssistant
 ```
 
 2. Install dependencies:
@@ -38,7 +42,7 @@ cd carrentalproject
 npm install
 ```
 
-or if you're using Yarn:
+Or if you prefer Yarn:
 
 ```bash
 yarn install
@@ -50,24 +54,24 @@ yarn install
 expo start
 ```
 
-\*or if command not working try (in my case i am using npm start):
+If the above command doesn't work, try:
 
 ```bash
 npm start
 ```
 
-This will open up the Expo developer tools in your browser.
+This will launch the Expo developer tools in your web browser.
 
 ### Running on a Device or Emulator
 
-To run the app on your device, download the Expo Go app and scan the QR code displayed in the Expo developer tools. For running on an emulator, follow the instructions in the Expo documentation for [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/) or [Android Emulator](https://docs.expo.dev/workflow/android-studio-emulator/).
+To run the app on your device, download the Expo Go app from your app store and scan the QR code displayed in the Expo developer tools. For emulator testing, refer to the Expo documentation for [setting up the iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/) or [Android Emulator](https://docs.expo.dev/workflow/android-studio-emulator/).
 
 ## License
 
-Distributed under the MIT License.
+This project is licensed under the MIT License
 
 ## Contact
 
-Casian - [casian.fr](https://casian.fr/) - contact@casian.fr
+Casian Ciorba - ciorbacasian@gmail.com
 
-detox test --configuration android.release
+---
