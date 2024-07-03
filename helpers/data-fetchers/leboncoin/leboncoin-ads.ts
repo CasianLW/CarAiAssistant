@@ -49,7 +49,7 @@ export function useFetchLeboncoinCars({
       minKm ? minKm : 0
     }-${maxKm ? maxKm : 1000000}&sort=price&order=asc`;
 
-    console.log("URL lbc:", url);
+    // console.log("URL lbc:", url);
 
     // const defaultFilters = {
     //   srt: "price",

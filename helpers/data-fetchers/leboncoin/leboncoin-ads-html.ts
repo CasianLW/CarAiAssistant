@@ -110,7 +110,7 @@ export const parseLeboncoinCarsFromHtml = (
     .map(extractDataFromArticle)
     .filter((car): car is MobiledeResultsCarCardProps => car !== null);
 
-  console.log("Leboncoin cars length:", cars.length);
+  // console.log("Leboncoin cars length:", cars.length);
 
   return { cars };
 };
