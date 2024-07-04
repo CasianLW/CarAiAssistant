@@ -101,18 +101,19 @@ const HomeScreen: FC = () => {
             className="bg-contain h-36"
           />
         </View>
-        <ButtonComponent
+        {/* <ButtonComponent
           onPress={() => navigation.navigate("SearchResults")}
           secondary={true}
           white={false}
           title="Search Results"
-        />
+        /> */}
       </View>
       <View style={styles.bottomContainer}>
-        <Text className="text-center" style={styles.signInText}>
+        {/* <Text className="text-center" style={styles.signInText}>
           You are now signed in! {user?.email ?? ""}
-        </Text>
+        </Text> */}
         <Button
+          color={"white"}
           title="Sign Out"
           onPress={signOut}
           // style={styles.signOutButton}
