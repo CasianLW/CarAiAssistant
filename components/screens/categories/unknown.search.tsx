@@ -94,7 +94,7 @@ const SearchUnknownScreen: FC = () => {
         setCurrentStep(0);
       } else {
         // console.error("Invalid response structure:", response.data);
-        setError("Le format de la réponse n'est pas celui attendu.");
+        setError("Le format de la réponse n'est pas celui attendu, réessayez.");
         setIsErrorModalVisible(true);
       }
     } catch (error) {
