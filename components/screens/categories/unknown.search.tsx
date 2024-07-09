@@ -164,7 +164,9 @@ const SearchUnknownScreen: FC = () => {
           {currentStep === 0 && (
             <ChatStep chatData={chatData} setChatData={setChatData} />
           )}
-          {currentStep === 1 && <FilterStep setFilterData={setFilterData} />}
+          {currentStep === 1 && (
+            <FilterStep filterData={filterData} setFilterData={setFilterData} />
+          )}
           <ButtonComponent
             disabledAction={isNextButtonDisabled()}
             title={buttonName}

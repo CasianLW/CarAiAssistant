@@ -211,7 +211,9 @@ const SearchCarScreen: FC = () => {
               setChatData={setChatData}
             />
           )}
-          {currentStep === 2 && <FilterStep setFilterData={setFilterData} />}
+          {currentStep === 2 && (
+            <FilterStep filterData={filterData} setFilterData={setFilterData} />
+          )}
           <ButtonComponent
             disabledAction={isNextButtonDisabled()}
             title={buttonName}
