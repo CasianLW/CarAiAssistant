@@ -1,12 +1,14 @@
 import React, { useState, useEffect, FC } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import DropdownPicker from "react-native-dropdown-picker";
 import { MakesAndModels } from "@/interfaces/make-models";
 import globalStyles from "@/styles/global.styles";
-import { CarData } from "../car.search";
+import { CarData, CarDataTypeEnum } from "../car.search";
 
 interface MakeModelStepProps {
   setCarData: (data: CarData) => void;
+  setSearchType: (data: CarDataTypeEnum) => void;
+  searchType: CarDataTypeEnum;
   carData?: CarData;
 }
 
@@ -17,7 +19,12 @@ interface DropdownItem {
 
 const makeModels: MakesAndModels = require("@/app/data/models-makes.json");
 
-const MakeModelStep: FC<MakeModelStepProps> = ({ setCarData, carData }) => {
+const MakeModelStep: FC<MakeModelStepProps> = ({
+  setCarData,
+  carData,
+  setSearchType,
+  searchType,
+}) => {
   const [openMake, setOpenMake] = useState(false);
   const [openModel, setOpenModel] = useState(false);
   const [selectedMakeId, setSelectedMakeId] = useState<string>(
@@ -104,8 +111,16 @@ const MakeModelStep: FC<MakeModelStepProps> = ({ setCarData, carData }) => {
       setSelectedModelTitle(model.label);
     }
   };
+
+  useEffect(() => {
+    setSearchType(searchType); // Assuming setSearchType updates a higher-level state
+  }, [searchType]);
+
   return (
-    <View className="z-20 mb-20" style={styles.container}>
+    <View style={styles.container}>
+      <Text style={[globalStyles.subtitle]}>
+        Sélectionnez la marque et le modèle du véhicule qui vous intéresse:
+      </Text>
       <Text style={styles.label}>Séléctionnez une marque:</Text>
       <DropdownPicker
         open={openMake}
@@ -123,7 +138,7 @@ const MakeModelStep: FC<MakeModelStepProps> = ({ setCarData, carData }) => {
         }}
         onChangeValue={handleMakeChange}
         searchable={true}
-        placeholder="Séléctionnez une marque..."
+        placeholder="Sélectionnez une marque..."
         zIndex={3000}
         zIndexInverse={1000}
         style={styles.dropdownStyle}
@@ -163,7 +178,7 @@ const MakeModelStep: FC<MakeModelStepProps> = ({ setCarData, carData }) => {
         }}
         onChangeValue={handleModelChange}
         searchable={true}
-        placeholder="Séléctionnez un modèle..."
+        placeholder="Sélectionnez un modèle..."
         disabled={!selectedMakeId}
         zIndex={2000}
         zIndexInverse={2000}
@@ -183,17 +198,85 @@ const MakeModelStep: FC<MakeModelStepProps> = ({ setCarData, carData }) => {
       <Text>{selectedModelId + "-" + selectedModelTitle} </Text>
       <Text>{carData?.makeId + "-" + carData?.makeTitle} </Text>
       <Text>{carData?.modelId + "-" + carData?.modelTitle} </Text> */}
+
+      <View className="my-4">
+        <Text className="mb-2" style={styles.filterText}>
+          Rechercher par:
+        </Text>
+
+        <RadioButton
+          label={"Modéle semblable"}
+          value={CarDataTypeEnum.ALIKE}
+          onPress={() => setSearchType(CarDataTypeEnum.ALIKE)}
+          selectedValue={searchType}
+        />
+        <RadioButton
+          label={"Modèle gamme supérieure "}
+          value={CarDataTypeEnum.HIGHER}
+          onPress={() => setSearchType(CarDataTypeEnum.HIGHER)}
+          selectedValue={searchType}
+        />
+        <RadioButton
+          label={"Modèle gamme inférieure"}
+          value={CarDataTypeEnum.LOWER}
+          onPress={() => setSearchType(CarDataTypeEnum.LOWER)}
+          selectedValue={searchType}
+        />
+        <RadioButton
+          label={"Autre (Spécifier à la prochaine étape)"}
+          value={CarDataTypeEnum.OTHER}
+          onPress={() => setSearchType(CarDataTypeEnum.OTHER)}
+          selectedValue={searchType}
+        />
+      </View>
     </View>
   );
 };
 
+export default MakeModelStep;
+
+interface RadioButtonProps {
+  label: string;
+  value: CarDataTypeEnum;
+  onPress: (value: CarDataTypeEnum) => void;
+  selectedValue: CarDataTypeEnum;
+}
+
+const RadioButton: FC<RadioButtonProps> = ({
+  label,
+  value,
+  onPress,
+  selectedValue,
+}) => {
+  return (
+    <TouchableOpacity
+      style={styles.radioButtonContainer}
+      onPress={() => onPress(value)}
+    >
+      <View
+        style={[
+          styles.outerCircle,
+          selectedValue === value && styles.selectedOuterCircle,
+        ]}
+      >
+        {selectedValue === value && <View style={styles.innerCircle} />}
+      </View>
+      <Text style={styles.radioText}>{label}</Text>
+    </TouchableOpacity>
+  );
+};
+
 const styles = StyleSheet.create({
+  filterText: {
+    fontSize: 20,
+    fontFamily: "UrbanistSemiBold600",
+  },
   container: {
     marginTop: 20,
     // padding: 20,
   },
   label: {
-    marginTop: 20,
+    marginTop: 12,
     fontSize: 18,
     marginBottom: 5,
     fontFamily: "UrbanistSemiBold600",
@@ -218,7 +301,7 @@ const styles = StyleSheet.create({
   },
   dropDownContainerStyle: {
     backgroundColor: "#EBF2FF", // Background of the dropdown items
-    borderColor: "#337AFF", // Border color of the dropdown container
+    borderColor: "#EBF2FF", // Border color of the dropdown container
     borderWidth: 1, // Border width of the dropdown container
     borderRadius: 12, // Border radius of the dropdown container
   },
@@ -228,6 +311,36 @@ const styles = StyleSheet.create({
   itemSeparatorStyle: {
     borderColor: "#337AFF",
   },
+  radioButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  outerCircle: {
+    height: 24,
+    width: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#337AFF", // Normal border color
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 10,
+  },
+  selectedOuterCircle: {
+    borderColor: "#1D68E3", // Change to a more noticeable color when selected
+    borderWidth: 3, // Optional: make the border slightly thicker on selection
+  },
+  innerCircle: {
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    backgroundColor: "#337AFF",
+  },
+  radioText: {
+    fontSize: 18,
+    color: "#000",
+  },
+  radioGroup: {
+    marginTop: 10,
+  },
 });
-
-export default MakeModelStep;
