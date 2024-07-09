@@ -14,27 +14,22 @@ import ButtonComponent from "../general/button-component";
 import SearchIcon from "@/assets/images/icons/search.icon";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/stores/main-store";
-import { Auth } from "aws-amplify";
+// import { Auth } from "aws-amplify";
 import { clearUser } from "@/stores/slices/auth-slice";
 import globalStyles from "@/styles/global.styles";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { SharedTabParamList } from "./sharedScreens";
 import { openURI } from "@/helpers/open-uri";
+import { MainTabParamList } from "@/app/_layout";
+import { signOut } from "@/helpers/sign-out.helper";
 
 const HomeScreen: FC = () => {
   const user = useSelector((state: RootState) => state.auth.userData);
   const dispatch = useDispatch();
   const navigation = useNavigation<StackNavigationProp<SharedTabParamList>>();
-
-  const signOut = async () => {
-    try {
-      await Auth.signOut();
-      dispatch(clearUser());
-    } catch (error) {
-      console.error("Error signing out: ", error);
-    }
-  };
+  const navigationLogged =
+    useNavigation<StackNavigationProp<MainTabParamList>>();
 
   return (
     <ScrollView style={styles.container}>
@@ -84,10 +79,27 @@ const HomeScreen: FC = () => {
             image={require("@/assets/images/app-ressources/homepage/category-search.png")}
           />
         </ScrollView>
-        <View>
-          <Text style={globalStyles.title}>Pour profiter pleinement:</Text>
-          <ButtonComponent onPress={signOut} title="Je crée mon compte !" />
-        </View>
+        {user ? (
+          <View>
+            <Text className="mt-10" style={globalStyles.title}>
+              Mes dernières recherches:
+            </Text>
+            <ButtonComponent
+              onPress={() => navigationLogged.navigate("Historique")}
+              title="Voir historique"
+            />
+          </View>
+        ) : (
+          <View>
+            <Text className="mt-10" style={globalStyles.title}>
+              Pour profiter pleinement:
+            </Text>
+            <ButtonComponent
+              onPress={() => signOut(dispatch)}
+              title="Je crée mon compte !"
+            />
+          </View>
+        )}
         {/* {user?<View>
           <Text style={globalStyles.title}>Pour profiter pleinement:</Text>
           <ButtonComponent onPress={signOut} title="Je crée mon compte !" />
@@ -126,12 +138,14 @@ const HomeScreen: FC = () => {
         {/* <Text className="text-center" style={styles.signInText}>
           You are now signed in! {user?.email ?? ""}
         </Text> */}
-        <Button
-          color={"white"}
-          title="Sign Out"
-          onPress={signOut}
-          // style={styles.signOutButton}
-        />
+        {user && (
+          <Button
+            color={"white"}
+            title="Deconnexion"
+            onPress={() => signOut(dispatch)}
+            // style={styles.signOutButton}
+          />
+        )}
       </View>
     </ScrollView>
   );
