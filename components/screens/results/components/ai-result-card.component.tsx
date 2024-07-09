@@ -114,7 +114,7 @@ const AiResultCardComponent: FC<{
         imageSrc={require("@/assets/images/ads/sg-banque-logo.svg")}
         adUrl={"https://bit.ly/societe-generale-ad"}
         title="Leasing"
-        text1="Estimation faite sur 36 mois pour 20000€ avec 0 apport initial"
+        text1={`Estimation faite sur 36 mois pour ${car.price}€ avec 0 apport initial`}
         text2="Multiples configurations possibles"
         text3="Verifiez le prix de du prêt exact via notre partenaire:"
       />
