@@ -25,52 +25,7 @@ import {
   // VehicleAiResponse,
 } from "@/interfaces/api-datas";
 import { MobiledeCarCardProps } from "@/interfaces/mobilede-car";
-
-function validateApiResponse(data: any): VehicleAiApiResponse | null {
-  if (
-    typeof data === "object" &&
-    typeof data.statusCode === "number" &&
-    typeof data.message === "string" &&
-    typeof data.data === "object" &&
-    typeof data.data.respectedFilters === "boolean" &&
-    Array.isArray(data.data.vehicles) &&
-    data.data.vehicles.every(isValidVehicle)
-  ) {
-    return data as VehicleAiApiResponse;
-  } else {
-    return (data = null);
-  }
-}
-// function isValidApiResponse(object: any): object is VehicleAiApiResponse {
-//   return (
-//     typeof object === "object" &&
-//     typeof object.statusCode === "number" &&
-//     typeof object.message === "string" &&
-//     typeof object.data === "object" &&
-//     typeof object.data.respectedFilters === "boolean" &&
-//     Array.isArray(object.data.vehicles) &&
-//     object.data.vehicles.every(isValidVehicle)
-//   );
-// }
-
-function isValidVehicle(object: any): object is MobiledeCarCardProps {
-  return (
-    typeof object === "object" &&
-    typeof object.make === "string" &&
-    typeof object.makeId === "number" &&
-    typeof object.model === "string" &&
-    typeof object.modelId === "number" &&
-    typeof object.year === "number" &&
-    typeof object.price === "number" &&
-    typeof object.consumption === "number" &&
-    typeof object.fuel_cost === "number" &&
-    typeof object.annual_maintenance === "number" &&
-    typeof object.registration_cost === "number" &&
-    typeof object.estimated_insurance === "number" &&
-    typeof object.max_km === "number" &&
-    typeof object.description === "string"
-  );
-}
+import { validateApiResponse } from "@/helpers/validate-results-api-response.helper";
 
 const SearchUnknownScreen: FC = () => {
   const { userData, isGuest } = useSelector((state: RootState) => state.auth);
@@ -136,13 +91,15 @@ const SearchUnknownScreen: FC = () => {
           minYear: "",
         });
         setChatData("");
+        setCurrentStep(0);
       } else {
-        console.error("Invalid response structure:", response.data);
+        // console.error("Invalid response structure:", response.data);
         setError("Le format de la réponse n'est pas celui attendu.");
         setIsErrorModalVisible(true);
       }
     } catch (error) {
-      console.error("Error processing data:", error);
+      // console.error("Error processing data:", error);
+      setIsErrorModalVisible(true);
       setError("Une erreur est survenue, réessayez.");
     } finally {
       setIsLoading(false);
@@ -204,7 +161,9 @@ const SearchUnknownScreen: FC = () => {
         <View style={globalStyles.searchContainer}>
           <Text style={globalStyles.title}>Recherche par imagination:</Text>
           <AdvancementBar currentStep={currentStep} totalSteps={steps.length} />
-          {currentStep === 0 && <ChatStep setChatData={setChatData} />}
+          {currentStep === 0 && (
+            <ChatStep chatData={chatData} setChatData={setChatData} />
+          )}
           {currentStep === 1 && <FilterStep setFilterData={setFilterData} />}
           <ButtonComponent
             disabledAction={isNextButtonDisabled()}
