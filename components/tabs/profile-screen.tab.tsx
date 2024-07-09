@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import ButtonComponent from "../general/button-component";
 import { useDispatch } from "react-redux";
-import { clearUser } from "@/stores/slices/auth-slice";
 import NavSearch from "../screens/categories/nav.search";
 import globalStyles from "@/styles/global.styles";
 import conditionsAppText from "@/constants/conditions-de-vente.text";
