@@ -6,10 +6,11 @@ Welcome to the AI Car Selector, a cutting-edge app designed to help users discov
 
 ## Features
 
-- **AI-Powered Recommendations**: Receive personalized car suggestions based on sophisticated AI analysis of your preferences and driving habits.
+- **AI-Powered Recommendations**: Receive personalized car suggestions based on sophisticated AI analysis of your preferences and driving habits.(by unknown, category or car look alike)
 - **Explore a Diverse Range of Makes and Models**: Dive into a detailed catalog of cars, from luxury to economy, curated to suit a variety of tastes and budgets.
 - **Intuitive Selection Process**: Easily navigate through the car selection process with a user-friendly interface designed for optimal user experience.
 - **Secure and Efficient**: Enjoy a secure, fast, and efficient way to explore your car options without the hassle.
+- **History**: Once logged, check history of your previous searches & results
 
 ## Getting Started
 
