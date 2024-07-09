@@ -3,14 +3,16 @@ import { User } from "@/interfaces/auth";
 
 interface AuthState {
   userData: User | null;
-  isAuthenticated: boolean;
+  // isAuthenticated: boolean;
   isGuest: boolean;
+  token: string | null;
 }
 
 const initialState: AuthState = {
   userData: null,
-  isAuthenticated: false,
+  // isAuthenticated: false,
   isGuest: false,
+  token: null,
 };
 
 const authSlice = createSlice({
@@ -19,21 +21,24 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
       state.userData = action.payload;
-      state.isAuthenticated = true;
+      // state.isAuthenticated = true;
       state.isGuest = false;
     },
     clearUser: (state) => {
       state.userData = null;
-      state.isAuthenticated = false;
+      // state.isAuthenticated = false;
       state.isGuest = false;
     },
     logAsGuest: (state) => {
       state.userData = null;
-      state.isAuthenticated = false;
+      // state.isAuthenticated = false;
       state.isGuest = true;
+    },
+    setToken: (state, action: PayloadAction<string | null>) => {
+      state.token = action.payload;
     },
   },
 });
 
-export const { setUser, clearUser, logAsGuest } = authSlice.actions;
+export const { setUser, clearUser, logAsGuest, setToken } = authSlice.actions;
 export default authSlice.reducer;
