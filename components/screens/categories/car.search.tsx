@@ -1,22 +1,34 @@
-import React, { useState, FC } from "react";
+import React, { useState, FC, useCallback } from "react";
 import {
   View,
   Text,
-  StyleSheet,
-  Button,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
+  Modal,
 } from "react-native";
 import globalStyles from "@/styles/global.styles";
 import { useNavigation } from "@react-navigation/native";
 import NavSearch from "./nav.search";
-import ChatStep from "./steps/chat.step";
+import ChatStep, { ChatStepType } from "./steps/chat.step";
 import AdvancementBar from "./advancement-bar.component";
 import FilterStep, { FilterData } from "./steps/filter.step";
 import MakeModelStep from "./steps/make-model.step";
 import ButtonComponent from "@/components/general/button-component";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { SharedTabParamList } from "@/components/tabs/sharedScreens";
+import { apiProcessVehicleData } from "@/utils/api";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores/main-store";
+import { validateApiResponse } from "@/helpers/validate-results-api-response.helper";
+
+export enum CarDataTypeEnum {
+  ALIKE = "Semblable",
+  HIGHER = "Gamme supérieure",
+  LOWER = "Gamme inférieure",
+  OTHER = "Autre",
+}
+
 export interface CarData {
   makeId: string;
   makeTitle: string;
@@ -25,17 +37,18 @@ export interface CarData {
 }
 
 const SearchCarScreen: FC = () => {
+  const { userData, isGuest } = useSelector((state: RootState) => state.auth);
+
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [searchType, setSearchType] = useState<CarDataTypeEnum>(
+    CarDataTypeEnum.ALIKE
+  );
   const [carData, setCarData] = useState<CarData>({
     makeId: "",
     makeTitle: "",
     modelId: "",
     modelTitle: "",
   });
-  // const [carData, setCarData] = useState<{ make: string; model: string }>({
-  //   make: "",
-  //   model: "",
-  // });
   const [chatData, setChatData] = useState<string>("");
   const [filterData, setFilterData] = useState<FilterData>({
     minPrice: "",
@@ -47,24 +60,100 @@ const SearchCarScreen: FC = () => {
     maxYear: "",
     minYear: "",
   });
-  // const navigation = useNavigation();
-  const navigation = useNavigation<StackNavigationProp<SharedTabParamList>>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
 
-  const steps = ["MakeModel", "Filter", "Chat"];
+  const navigation = useNavigation<StackNavigationProp<SharedTabParamList>>();
+  const steps = ["Car", "Chat", "Filter"];
+
+  const processFinalData = async () => {
+    setIsLoading(true);
+    let filterDescriptions = [];
+    for (const [key, value] of Object.entries(filterData)) {
+      if (value) {
+        filterDescriptions.push(`${key}: ${value}`);
+      }
+    }
+    const filterString =
+      filterDescriptions.length > 0
+        ? ` Filters: ${filterDescriptions.join(", ")}`
+        : "";
+    // const completePrompt = `Search for ${carData.makeTitle} ${carData.modelTitle} cars. ${chatData}${filterString}`;
+
+    const completePrompt = `${
+      searchType === CarDataTypeEnum.OTHER
+        ? "Utilise comme reference: "
+        : searchType === CarDataTypeEnum.ALIKE
+        ? "Recherche des voitures similaires à: "
+        : searchType === CarDataTypeEnum.HIGHER
+        ? "Recherche des voitures de gamme supérieure à: "
+        : searchType === CarDataTypeEnum.LOWER
+        ? "Recherche des voitures de gamme inférieure à: "
+        : ""
+    }  ${carData.makeTitle} ${carData.modelTitle}. 
+    Instructions: ${chatData}  
+    Filtres:${filterString}`;
+
+    try {
+      const response = await apiProcessVehicleData({
+        userId: userData?.userId || null,
+        userLogged: !isGuest,
+        prompt: completePrompt,
+      });
+      // Simulate an API call
+      // console.log("Processing with prompt:", completePrompt);
+
+      const validResults = validateApiResponse(response.data);
+      if (validResults) {
+        const completeData = { ...validResults, filters: filterData };
+        navigation.navigate("SearchResults", { results: completeData });
+        setError("");
+        setFilterData({
+          minPrice: "",
+          maxPrice: "",
+          maxHp: "",
+          minHp: "",
+          maxKm: "",
+          minKm: "",
+          maxYear: "",
+          minYear: "",
+        });
+        setChatData("");
+        setCarData({ makeId: "", makeTitle: "", modelId: "", modelTitle: "" });
+        setSearchType(CarDataTypeEnum.ALIKE);
+        setCurrentStep(0);
+      } else {
+        // console.error("Invalid response structure:", response.data);
+        setError("Le format de la réponse n'est pas celui attendu, réessayez.");
+        setIsErrorModalVisible(true);
+      }
+    } catch (error) {
+      // console.error("Error processing data:", error);
+      setError("Une erreur est survenue, réessayez.");
+      setIsErrorModalVisible(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const nextStep = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      console.log("Final data:", { carData, filterData, chatData });
-      navigation.navigate("SearchResults");
+      processFinalData();
     }
   };
 
-  const isNextButtonDisabled =
-    (currentStep === 0 && (!carData.makeTitle || !carData.modelTitle)) ||
-    // (currentStep === 1 && (!filterData.minPrice || !filterData.maxPrice)) ||
-    (currentStep === 2 && !chatData);
+  const isNextButtonDisabled = useCallback(() => {
+    return (
+      (currentStep === 0 && (!carData.makeTitle || !carData.modelTitle)) ||
+      (currentStep === 1 && !chatData)
+      //   ||
+      //   (currentStep === 2 && (!filterData.minPrice || !filterData.maxPrice)
+      // )
+    );
+  }, [currentStep, carData, chatData, filterData]);
 
   const buttonName =
     currentStep === steps.length - 1 ? "Lancer la recherche" : "Continuer";
@@ -80,19 +169,53 @@ const SearchCarScreen: FC = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View className="bg-app-blue-100">
+        {isLoading && (
+          <View style={globalStyles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        )}
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isErrorModalVisible}
+          onRequestClose={() => setIsErrorModalVisible(false)}
+        >
+          <View style={globalStyles.modalCenteredView}>
+            <View style={globalStyles.modalView}>
+              <Text className="text-red-500">{error}</Text>
+              <ButtonComponent
+                title="Fermer"
+                onPress={() => setIsErrorModalVisible(false)}
+              />
+            </View>
+          </View>
+        </Modal>
+
         <NavSearch goBack={goBack} />
         <View style={globalStyles.searchContainer}>
           <Text style={globalStyles.title}>Recherche par voiture:</Text>
           <AdvancementBar currentStep={currentStep} totalSteps={steps.length} />
           {currentStep === 0 && (
-            <MakeModelStep setCarData={setCarData} carData={carData} />
+            <MakeModelStep
+              setSearchType={setSearchType}
+              setCarData={setCarData}
+              carData={carData}
+              searchType={searchType}
+            />
           )}
-          {currentStep === 1 && <FilterStep setFilterData={setFilterData} />}
-          {currentStep === 2 && <ChatStep setChatData={setChatData} />}
+          {currentStep === 1 && (
+            <ChatStep
+              chatType={ChatStepType.CAR}
+              chatData={chatData}
+              setChatData={setChatData}
+            />
+          )}
+          {currentStep === 2 && <FilterStep setFilterData={setFilterData} />}
           <ButtonComponent
+            disabledAction={isNextButtonDisabled()}
             title={buttonName}
             onPress={nextStep}
-            disabledAction={isNextButtonDisabled}
           />
         </View>
       </View>
