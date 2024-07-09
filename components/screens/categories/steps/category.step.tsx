@@ -16,39 +16,39 @@ interface CategoryStepProps {
 const categories = [
   {
     name: "4x4, SUV",
-    image: require("@/assets/images/app-ressources/homepage/car-search.png"),
+    image: require("@/assets/images/categories/suv.png"),
   },
   {
     name: "Berline",
-    image: require("@/assets/images/app-ressources/homepage/car-search.png"),
+    image: require("@/assets/images/categories/berline.png"),
   },
   {
     name: "Break",
-    image: require("@/assets/images/app-ressources/homepage/car-search.png"),
+    image: require("@/assets/images/categories/break.png"),
   },
   {
     name: "Cabriolet",
-    image: require("@/assets/images/app-ressources/homepage/car-search.png"),
+    image: require("@/assets/images/categories/cabriolet.png"),
   },
   {
     name: "Citadine",
-    image: require("@/assets/images/app-ressources/homepage/car-search.png"),
+    image: require("@/assets/images/categories/citadine.png"),
   },
   {
     name: "Coupé",
-    image: require("@/assets/images/app-ressources/homepage/car-search.png"),
+    image: require("@/assets/images/categories/coupe.png"),
   },
   {
     name: "Monospace",
-    image: require("@/assets/images/app-ressources/homepage/car-search.png"),
+    image: require("@/assets/images/categories/monospace.png"),
   },
   {
     name: "Van",
-    image: require("@/assets/images/app-ressources/homepage/car-search.png"),
+    image: require("@/assets/images/categories/van.png"),
   },
   {
     name: "Autre",
-    image: require("@/assets/images/app-ressources/homepage/car-search.png"),
+    image: require("@/assets/images/categories/autre.png"),
   },
   //   { name: "4x4, SUV", image: require("@/assets/images/categories/4x4-suv.png") },
   //   { name: "Berline", image: require("@/assets/images/categories/berline.png") },
@@ -62,7 +62,6 @@ const categories = [
 ];
 
 const CategoryStep: FC<CategoryStepProps> = ({ setCategoryData }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [animations, setAnimations] = useState<{
     [key: string]: Animated.Value;
   }>({});
@@ -76,7 +75,6 @@ const CategoryStep: FC<CategoryStepProps> = ({ setCategoryData }) => {
   }, []);
 
   const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
     setCategoryData(category);
 
     categories.forEach((cat) => {
@@ -149,9 +147,10 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   categoryImage: {
-    width: 70,
-    height: 70,
-    marginBottom: 10,
+    resizeMode: "contain",
+    width: 100,
+    height: 72,
+    marginBottom: 0,
   },
   categoryText: {
     fontSize: 14,
