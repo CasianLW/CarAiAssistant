@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { AuthStackParamList } from "@/app/_layout";
+import { AuthStackParamList, MainTabParamList } from "@/app/_layout";
 import globalStyles from "@/styles/global.styles";
 import ButtonComponent from "../general/button-component";
 import useSignIn from "@/hooks/use-sign-in.hook";
@@ -23,8 +23,11 @@ import InputComponent from "../general/input-component";
 import MailIcon from "@/assets/images/icons/mail.icon";
 import LockIcon from "@/assets/images/icons/lock.icon";
 import ExternalConnexionButtons from "../general/external-connexion-buttons-component";
+import { useSelector } from "react-redux";
+import { RootState } from "@/stores/main-store";
 
 type SignInNavigationProp = StackNavigationProp<AuthStackParamList, "SignIn">;
+type LoggedNavigationProp = StackNavigationProp<MainTabParamList, "Home">;
 
 const SignInScreen: FC = () => {
   const {
@@ -41,7 +44,10 @@ const SignInScreen: FC = () => {
     setIsErrorModalVisible,
   } = useSignIn();
   const navigation = useNavigation<SignInNavigationProp>();
+  const navigationLogged = useNavigation<LoggedNavigationProp>();
   const dispatch = useDispatch();
+
+  const user = useSelector((state: RootState) => state.auth.userData);
 
   const handleResetOnboarding = async () => {
     await AsyncStorage.setItem("hasOnboarded", "false");
@@ -50,6 +56,10 @@ const SignInScreen: FC = () => {
   const [hasOnboardedValue, setHasOnboardedValue] = useState<string | null>(
     null
   );
+
+  useEffect(() => {
+    user && navigationLogged.navigate("Home");
+  }, []);
 
   useEffect(() => {
     const getHasOnboarded = async () => {
@@ -98,6 +108,10 @@ const SignInScreen: FC = () => {
             >
               Connexion
             </Text>
+            {/* <ButtonComponent
+              title="Log user data"
+              onPress={() => console.log(user)}
+            /> */}
             <Text
               className="text-app-black-300 mb-6 mt-2 text-center"
               style={globalStyles.subtitle}
