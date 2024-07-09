@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "@/app/_layout";
-import { setUser } from "@/stores/slices/auth-slice";
+import { setToken, setUser } from "@/stores/slices/auth-slice";
 import { RootState } from "@/stores/main-store";
 import { apiLogin } from "@/utils/api";
 import { DecodedToken, LoginPayload } from "@/interfaces/auth";
@@ -20,9 +20,9 @@ const useSignIn = () => {
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
+  // const isAuthenticated = useSelector(
+  //   (state: RootState) => state.auth.isAuthenticated
+  // );
 
   const handleSignIn = async () => {
     if (isSigningIn) return;
@@ -46,6 +46,7 @@ const useSignIn = () => {
           isPremium: decodedToken.isPremium,
         };
         dispatch(setUser(userData));
+        dispatch(setToken(access_token));
       } else {
         throw new Error("No access token found in response");
       }
