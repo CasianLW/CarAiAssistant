@@ -26,6 +26,10 @@ import SearchCategoryScreen from "@/components/screens/categories/category.searc
 import { sharedScreens } from "@/components/tabs/sharedScreens";
 import { apiGetUserProfile } from "@/utils/api";
 import { decodeToken, getStoredToken } from "@/helpers/auth-helpers";
+import ProfileIcon from "@/assets/images/icons/profile.icon";
+import HomeIcon from "@/assets/images/icons/home.icon";
+import HistoryScreen from "@/components/tabs/history-screen.tab";
+import History2Icon from "@/assets/images/icons/history2.icon";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const MainTab = createBottomTabNavigator<MainTabParamList>();
@@ -39,6 +43,7 @@ export type AuthStackParamList = {
 
 export type MainTabParamList = {
   Home: undefined;
+  Historique: undefined;
   Profile: undefined;
   Login: undefined;
 };
@@ -56,8 +61,42 @@ const AuthNavigator: FC<{ hasOnboarded: boolean }> = ({ hasOnboarded }) => (
 );
 
 const MainAppNavigator: FC = () => (
-  <MainTab.Navigator>
+  <MainTab.Navigator
+    screenOptions={({ route }) => ({
+      headerShown: false,
+
+      tabBarIcon: ({ focused, color, size }) => {
+        // let iconName;
+
+        if (route.name === "Home") {
+          // iconName = focused ? "home" : "home";
+          return <HomeIcon fill={focused ? "#1D68E3" : "black"} />;
+        } else if (route.name === "Profile") {
+          // iconName = focused ? "sign-in" : "sign-in";
+          return (
+            <ProfileIcon
+              strokeWidth={1.5}
+              stroke={focused ? "#1D68E3" : "black"}
+            />
+          );
+        } else if (route.name === "Historique") {
+          // iconName = focused ? "sign-in" : "sign-in";
+          return (
+            <History2Icon
+              // strokeWidth={1.5}
+              stroke={focused ? "#1D68E3" : "black"}
+            />
+          );
+        }
+
+        // return <ProfileIcon color={"#454545"} stroke={"#454545"} />;
+      },
+      tabBarActiveTintColor: "#1D68E3",
+      tabBarInactiveTintColor: "black",
+    })}
+  >
     <MainTab.Screen name="Home" component={HomeScreen} />
+    <MainTab.Screen name="Historique" component={HistoryScreen} />
     <MainTab.Screen name="Profile" component={ProfileScreen} />
     {sharedScreens}
   </MainTab.Navigator>
@@ -67,11 +106,35 @@ const GuestAppNavigator: FC = () => {
   const dispatch = useDispatch();
   const handleLoginTabPress = (event: { defaultPrevented: boolean }) => {
     dispatch(clearUser());
-    event.defaultPrevented = true;
+    // event.defaultPrevented = true;
   };
 
   return (
-    <MainTab.Navigator>
+    <MainTab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused, color, size }) => {
+          // let iconName;
+
+          if (route.name === "Home") {
+            // iconName = focused ? "home" : "home";
+            return <HomeIcon fill={focused ? "#1D68E3" : "black"} />;
+          } else if (route.name === "Login") {
+            // iconName = focused ? "sign-in" : "sign-in";
+            return (
+              <ProfileIcon
+                strokeWidth={1.5}
+                stroke={focused ? "#1D68E3" : "black"}
+              />
+            );
+          }
+
+          // return <ProfileIcon color={"#454545"} stroke={"#454545"} />;
+        },
+        tabBarActiveTintColor: "#1D68E3",
+        tabBarInactiveTintColor: "black",
+      })}
+    >
       <MainTab.Screen
         name="Home"
         component={HomeScreen}
@@ -105,9 +168,8 @@ const GuestAppNavigator: FC = () => {
 const RootLayout: FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasOnboarded, setHasOnboarded] = useState(false);
-  const { isAuthenticated, isGuest } = useSelector(
-    (state: RootState) => state.auth
-  );
+  // const { isAuthenticated, isGuest } = useSelector(
+  const { userData, isGuest } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -180,7 +242,7 @@ const RootLayout: FC = () => {
 
   return (
     <NavigationContainer independent={true} theme={AppTheme}>
-      {isAuthenticated ? (
+      {userData ? (
         <MainAppNavigator />
       ) : isGuest ? (
         <GuestAppNavigator />
