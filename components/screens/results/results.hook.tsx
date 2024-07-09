@@ -106,7 +106,7 @@ const useSearchResults = (
   //       "Reliable family car with good fuel efficiency and low maintenance costs.",
   //   },
   // ];
-
+  // console.log("chosenCarToFetch:", chosenCarToFetch);
   const results = aiResults || [];
   const {
     loading: loadingMobilede,
@@ -119,10 +119,10 @@ const useSearchResults = (
     model: chosenCarToFetch?.model || "",
     maxYear: carFilters.maxYear,
     minPrice: chosenCarToFetch?.price
-      ? `${chosenCarToFetch?.price * 0.6}`
+      ? `${chosenCarToFetch?.price * 0.5}`
       : "0",
     maxPrice: chosenCarToFetch?.price
-      ? `${chosenCarToFetch?.price * 1.3}`
+      ? `${chosenCarToFetch?.price * 1.8}`
       : "0",
     minYear: `${chosenCarToFetch?.year}` || "0",
     maxKm: "200000",
@@ -143,7 +143,7 @@ const useSearchResults = (
     model: chosenCarToFetch?.model || "",
     maxYear: carFilters.maxYear,
     minPrice: chosenCarToFetch?.price
-      ? `${chosenCarToFetch?.price * 0.7}`
+      ? `${chosenCarToFetch?.price * 0.5}`
       : "0",
     maxPrice: chosenCarToFetch?.price
       ? `${chosenCarToFetch?.price * 1.8}`
@@ -163,7 +163,7 @@ const useSearchResults = (
     model: chosenCarToFetch?.model || "",
     maxYear: carFilters.maxYear,
     minPrice: chosenCarToFetch?.price
-      ? `${chosenCarToFetch?.price * 0.7}`
+      ? `${chosenCarToFetch?.price * 0.5}`
       : "0",
     maxPrice: chosenCarToFetch?.price
       ? `${chosenCarToFetch?.price * 1.8}`
@@ -252,9 +252,9 @@ const useSearchResults = (
   };
 
   useEffect(() => {
-    console.log("Chosen car to fetch: ", chosenCarToFetch);
-    console.log("Active platform: ", activePlatform);
-    console.log("carFilters: ", carFilters);
+    // console.log("Chosen car to fetch: ", chosenCarToFetch);
+    // console.log("Active platform: ", activePlatform);
+    // console.log("carFilters: ", carFilters);
     if (chosenCarToFetch) {
       setOpenResults(true); // Open results view
       // Trigger fetching logic based on the chosen platform
