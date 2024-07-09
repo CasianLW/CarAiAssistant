@@ -20,6 +20,7 @@ import globalStyles from "@/styles/global.styles";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { SharedTabParamList } from "./sharedScreens";
+import { openURI } from "@/helpers/open-uri";
 
 const HomeScreen: FC = () => {
   const user = useSelector((state: RootState) => state.auth.userData);
@@ -83,24 +84,37 @@ const HomeScreen: FC = () => {
             image={require("@/assets/images/app-ressources/homepage/category-search.png")}
           />
         </ScrollView>
-        <Text style={globalStyles.title}>Pour profiter pleinement:</Text>
-        <ButtonComponent onPress={signOut} title="Je crée mon compte !" />
+        <View>
+          <Text style={globalStyles.title}>Pour profiter pleinement:</Text>
+          <ButtonComponent onPress={signOut} title="Je crée mon compte !" />
+        </View>
+        {/* {user?<View>
+          <Text style={globalStyles.title}>Pour profiter pleinement:</Text>
+          <ButtonComponent onPress={signOut} title="Je crée mon compte !" />
+        </View>:<View>
+          <Text style={globalStyles.title}>Autres fonctionnalités:</Text>
+          <ButtonComponent onPress={() => navigation.navigate("SearchCategory")} title="Anciennes recherches" />
+        </View>} */}
+
         <Text className="text-center text-app-blue-300 text-base my-2 ">
           Fonctionnalités gratuites grâce a :
         </Text>
-        <View className="h-[120px] relative overflow-hidden rounded-3xl">
-          <Text
-            className="absolute z-10 text-white mt-2 ml-4 text-xl"
-            style={{ fontFamily: "UrbanistSemiBold600" }}
-          >
-            Michelin: le top du pneu
-          </Text>
-
-          <Image
-            source={require("@/assets/images/app-ressources/login-image.webp")}
-            className="bg-contain h-36"
-          />
-        </View>
+        <TouchableOpacity onPress={() => openURI("https://bit.ly/michelin-ad")}>
+          <View className="h-[120px] relative overflow-hidden rounded-3xl ">
+            <Text
+              className="absolute z-10  text-white mt-2 ml-4 text-xl shadow-black"
+              style={{ fontFamily: "UrbanistSemiBold600" }}
+            >
+              Michelin: le top du pneu
+            </Text>
+            {/* <View className="h-full w-full bg-[rgba(00,000,000,50)]" /> */}
+            <Image
+              source={require("@/assets/images/ads/michelin-ad.png")}
+              // source={require("@/assets/images/ads/ouipneu-michelin.png")}
+              className="bg-contain h-36 w-full"
+            />
+          </View>
+        </TouchableOpacity>
         {/* <ButtonComponent
           onPress={() => navigation.navigate("SearchResults")}
           secondary={true}
