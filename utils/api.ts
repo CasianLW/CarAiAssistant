@@ -7,6 +7,7 @@ import {
   ResetPasswordPayload,
   User,
 } from "@/interfaces/auth";
+import { HistoryItem } from "@/interfaces/history.interface";
 import axios from "axios";
 
 const API_BASE_URL = process.env.APP_API_URL;
@@ -43,4 +44,23 @@ export const apiProcessVehicleData = (data: AiPayloadUnknown) => {
 };
 export const apiRapportData = (data: RapportPayloadData) => {
   return axios.post(`${API_BASE_URL}/vehicles/rapport`, data);
+};
+
+// History part
+
+// Fetch complete history
+export const apiFetchAllHistory = async (
+  userId: string,
+  token: string
+): Promise<HistoryItem[]> => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/history/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data; // Assuming the server sends back an array of history items
+  } catch (error) {
+    throw new Error("Unable to fetch history");
+  }
 };
