@@ -1,9 +1,12 @@
 import React, { useState, useEffect, FC } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import DropdownPicker from "react-native-dropdown-picker";
-import { MakesAndModels } from "@/interfaces/make-models";
+import {
+  CarData,
+  CarDataTypeEnum,
+  MakesAndModels,
+} from "@/interfaces/make-models";
 import globalStyles from "@/styles/global.styles";
-import { CarData, CarDataTypeEnum } from "../car.search";
 
 interface MakeModelStepProps {
   setCarData: (data: CarData) => void;

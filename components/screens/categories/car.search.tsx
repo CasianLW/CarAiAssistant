@@ -21,20 +21,7 @@ import { apiProcessVehicleData } from "@/utils/api";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores/main-store";
 import { validateApiResponse } from "@/helpers/validate-results-api-response.helper";
-
-export enum CarDataTypeEnum {
-  ALIKE = "Semblable",
-  HIGHER = "Gamme supérieure",
-  LOWER = "Gamme inférieure",
-  OTHER = "Autre",
-}
-
-export interface CarData {
-  makeId: string;
-  makeTitle: string;
-  modelId: string;
-  modelTitle: string;
-}
+import { CarData, CarDataTypeEnum } from "@/interfaces/make-models";
 
 const SearchCarScreen: FC = () => {
   const { userData, isGuest } = useSelector((state: RootState) => state.auth);

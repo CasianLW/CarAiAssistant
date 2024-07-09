@@ -1,3 +1,17 @@
+export enum CarDataTypeEnum {
+  ALIKE = "Semblable",
+  HIGHER = "Gamme supérieure",
+  LOWER = "Gamme inférieure",
+  OTHER = "Autre",
+}
+
+export interface CarData {
+  makeId: string;
+  makeTitle: string;
+  modelId: string;
+  modelTitle: string;
+}
+
 export interface ModelCodes {
   [key: string]: string;
 }
