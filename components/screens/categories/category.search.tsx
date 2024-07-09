@@ -11,7 +11,7 @@ import {
 import globalStyles from "@/styles/global.styles";
 import { useNavigation } from "@react-navigation/native";
 import NavSearch from "./nav.search";
-import ChatStep from "./steps/chat.step";
+import ChatStep, { ChatStepType } from "./steps/chat.step";
 import AdvancementBar from "./advancement-bar.component";
 import FilterStep, { FilterData } from "./steps/filter.step";
 import CategoryStep from "./steps/category.step";
@@ -23,41 +23,7 @@ import { RootState } from "@/stores/main-store";
 import { apiProcessVehicleData } from "@/utils/api";
 import { VehicleAiApiResponse } from "@/interfaces/api-datas";
 import { MobiledeCarCardProps } from "@/interfaces/mobilede-car";
-
-function validateApiResponse(data: any): VehicleAiApiResponse | null {
-  if (
-    typeof data === "object" &&
-    typeof data.statusCode === "number" &&
-    typeof data.message === "string" &&
-    typeof data.data === "object" &&
-    typeof data.data.respectedFilters === "boolean" &&
-    Array.isArray(data.data.vehicles) &&
-    data.data.vehicles.every(isValidVehicle)
-  ) {
-    return data as VehicleAiApiResponse;
-  } else {
-    return (data = null);
-  }
-}
-
-function isValidVehicle(object: any): object is MobiledeCarCardProps {
-  return (
-    typeof object === "object" &&
-    typeof object.make === "string" &&
-    typeof object.makeId === "number" &&
-    typeof object.model === "string" &&
-    typeof object.modelId === "number" &&
-    typeof object.year === "number" &&
-    typeof object.price === "number" &&
-    typeof object.consumption === "number" &&
-    typeof object.fuel_cost === "number" &&
-    typeof object.annual_maintenance === "number" &&
-    typeof object.registration_cost === "number" &&
-    typeof object.estimated_insurance === "number" &&
-    typeof object.max_km === "number" &&
-    typeof object.description === "string"
-  );
-}
+import { validateApiResponse } from "@/helpers/validate-results-api-response.helper";
 
 const SearchCategoryScreen: FC = () => {
   const { userData, isGuest } = useSelector((state: RootState) => state.auth);
@@ -95,7 +61,7 @@ const SearchCategoryScreen: FC = () => {
       filterDescriptions.length > 0
         ? ` Filters: ${filterDescriptions.join(", ")}`
         : "";
-    const completePrompt = `Search me strictly ${categoryData} cars. ${chatData}${filterString}`;
+    const completePrompt = `Recherche moi strictement des ${categoryData}. ${chatData}${filterString}`;
 
     try {
       const response = await apiProcessVehicleData({
@@ -104,7 +70,7 @@ const SearchCategoryScreen: FC = () => {
         prompt: completePrompt,
       });
 
-      console.log("Response received:", response);
+      // console.log("Response received:", response);
 
       const validResults = validateApiResponse(response.data);
       if (validResults) {
@@ -122,14 +88,17 @@ const SearchCategoryScreen: FC = () => {
           minYear: "",
         });
         setChatData("");
+        setCategoryData("");
+        setCurrentStep(0);
       } else {
-        console.error("Invalid response structure:", response.data);
+        // console.error("Invalid response structure:", response.data);
         setError("Le format de la réponse n'est pas celui attendu.");
         setIsErrorModalVisible(true);
       }
     } catch (error) {
-      console.error("Error processing data:", error);
+      // console.error("Error processing data:", error);
       setError("Une erreur est survenue, réessayez.");
+      setIsErrorModalVisible(true);
     } finally {
       setIsLoading(false);
     }
@@ -193,7 +162,13 @@ const SearchCategoryScreen: FC = () => {
           {currentStep === 0 && (
             <CategoryStep setCategoryData={setCategoryData} />
           )}
-          {currentStep === 1 && <ChatStep setChatData={setChatData} />}
+          {currentStep === 1 && (
+            <ChatStep
+              chatType={ChatStepType.CATEGORY}
+              chatData={chatData}
+              setChatData={setChatData}
+            />
+          )}
           {currentStep === 2 && <FilterStep setFilterData={setFilterData} />}
           <ButtonComponent
             disabledAction={isNextButtonDisabled()}
