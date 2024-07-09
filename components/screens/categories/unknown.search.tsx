@@ -71,7 +71,7 @@ const SearchUnknownScreen: FC = () => {
         // filters: filterData,
       });
 
-      console.log("Response received:", response);
+      // console.log("Response received:", response);
 
       const validResults = validateApiResponse(response.data);
       // console.log("Valid results:", response);
