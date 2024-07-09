@@ -16,19 +16,22 @@ export interface FilterData {
 
 interface FilterStepProps {
   setFilterData: (data: FilterData) => void;
+  filterData: FilterData;
 }
 
-const FilterStep: FC<FilterStepProps> = ({ setFilterData }) => {
-  const [filter, setFilter] = useState<FilterData>({
-    minPrice: "",
-    maxPrice: "",
-    minYear: "",
-    maxYear: "",
-    minKm: "",
-    maxKm: "",
-    minHp: "",
-    maxHp: "",
-  });
+const FilterStep: FC<FilterStepProps> = ({ setFilterData, filterData }) => {
+  const [filter, setFilter] = useState<FilterData>(
+    filterData || {
+      minPrice: "",
+      maxPrice: "",
+      minYear: "",
+      maxYear: "",
+      minKm: "",
+      maxKm: "",
+      minHp: "",
+      maxHp: "",
+    }
+  );
 
   const handleInputChange = (name: keyof FilterData, value: string) => {
     const updatedFilters = { ...filter, [name]: value };
