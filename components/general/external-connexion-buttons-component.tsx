@@ -43,7 +43,7 @@ const ExternalConnexionButtons: FC<ButtonComponentProps> = ({
   return (
     <View>
       {soon && (
-        <View className="z-50 bg-app-black-200 opacity-60 absolute h-[100%] w-full rounded-2xl">
+        <View className="z-50 bg-app-black-200 opacity-30 absolute h-[100%] w-full rounded-2xl">
           <Text className="text-app-white-100 text-xl text-center my-auto -rotate-12">
             Coming soon..
           </Text>
